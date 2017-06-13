@@ -37,7 +37,7 @@
 %%   Right brace   \}     Tilde         \~}
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{acmart}
-[2017/04/23 v1.35 Typesetting articles for Association of
+[2017/05/14 v1.39 Typesetting articles for Association of
 Computing Machinery]
 \def\@classname{acmart}
 \InputIfFileExists{acmart-preload-hook.tex}{%
@@ -45,6 +45,7 @@ Computing Machinery]
     I am loading acmart-preload-hook.tex. You are fully responsible
     for any problems from now on.}}{}
 \RequirePackage{xkeyval}
+\RequirePackage{xstring}
 \define@choicekey*+{acmart.cls}{format}[\ACM@format\ACM@format@nr]{%
   manuscript, acmsmall, acmlarge, acmtog, sigconf, siggraph,
   sigplan, sigchi, sigchi-a}[manuscript]{}{%
@@ -119,7 +120,7 @@ Computing Machinery]
     \PackageInfo{\@classname}{Not using authordraft mode}%
   \fi}{\PackageError{\@classname}{Option authordraft can be either true or
     false}}
-\ExecuteOptionsX{timestamp=false}
+\ExecuteOptionsX{authordraft=false}
 \def\ACM@fontsize{}
 \DeclareOptionX{9pt}{\edef\ACM@fontsize{\CurrentOption}}
 \DeclareOptionX{10pt}{\edef\ACM@fontsize{\CurrentOption}}
@@ -179,7 +180,7 @@ Computing Machinery]
   \or % siggraph
     \def\ACM@fontsize{9pt}%
    \or % sigplan
-    \def\ACM@fontsize{9pt}%
+    \def\ACM@fontsize{10pt}%
    \or % sigchi
     \def\ACM@fontsize{10pt}%
   \or % sigchi-a
@@ -549,6 +550,7 @@ Computing Machinery]
 \or % sigchi
 \or % sigchi-a
 \fi
+\setlength\normalparindent{\parindent}
 \def\copyrightpermissionfootnoterule{\kern-3\p@
   \hrule \@width \columnwidth \kern 2.6\p@}
 \RequirePackage{manyfoot}
@@ -697,10 +699,50 @@ Computing Machinery]
 \or % sigchi
 \or % sigchi-a
 \fi
-\renewcommand{\descriptionlabel}[1]{\hspace\labelsep \upshape\bfseries #1}
+\newdimen\@ACM@labelwidth
+\AtBeginDocument{%
+  \setlength\labelsep{4pt}
+  \setlength{\@ACM@labelwidth}{6.5pt}
+
+  %% First-level list: when beginning after the first line of an
+  %% indented paragraph or ending before an indented paragraph, labels
+  %% should not hang to the left of the preceding/following text.
+  \setlength\leftmargini{\z@}
+  \addtolength\leftmargini{\parindent}
+  \addtolength\leftmargini{2\labelsep}
+  \addtolength\leftmargini{\@ACM@labelwidth}
+
+  %% Second-level and higher lists.
+  \setlength\leftmarginii{\z@}
+  \addtolength\leftmarginii{0.5\labelsep}
+  \addtolength\leftmarginii{\@ACM@labelwidth}
+  \setlength\leftmarginiii{\leftmarginii}
+  \setlength\leftmarginiv{\leftmarginiii}
+  \setlength\leftmarginv{\leftmarginiv}
+  \setlength\leftmarginvi{\leftmarginv}
+  \@listi}
+\newskip\listisep
+\listisep\smallskipamount
+\def\@listI{\leftmargin\leftmargini
+  \labelwidth\leftmargini \advance\labelwidth-\labelsep
+  \listparindent\z@
+  \topsep\listisep}
+\let\@listi\@listI
+\def\@listii{\leftmargin\leftmarginii
+  \labelwidth\leftmarginii \advance\labelwidth-\labelsep
+  \topsep\z@skip}
+\def\@listiii{\leftmargin\leftmarginiii
+  \labelwidth\leftmarginiii \advance\labelwidth-\labelsep}
+\def\@listiv{\leftmargin\leftmarginiv
+  \labelwidth\leftmarginiv \advance\labelwidth-\labelsep}
+\def\@listv{\leftmargin\leftmarginv
+  \labelwidth\leftmarginv \advance\labelwidth-\labelsep}
+\def\@listvi{\leftmargin\leftmarginvi
+  \labelwidth\leftmarginvi \advance\labelwidth-\labelsep}
+\renewcommand{\descriptionlabel}[1]{\upshape\bfseries #1}
 \renewenvironment{description}{\list{}{%
-    \itemindent-12\p@
-    \labelwidth\z@ \let\makelabel\descriptionlabel}%
+    \labelwidth\@ACM@labelwidth
+    \let\makelabel\descriptionlabel}%
 }{
   \endlist
 }
@@ -715,6 +757,7 @@ Computing Machinery]
   JERIC,%
   JETC,%
   JOCCH,%
+  PACMHCI,%
   PACMPL,%
   POMACS,%
   TAAS,%
@@ -794,6 +837,10 @@ Computing Machinery]
 \or % JOCCH
   \def\@journalName{ACM Journal on Computing and Cultural Heritage}%
   \def\@journalName{ACM J. Comput. Cult. Herit.}%
+\or % PACMHCI
+  \def\@journalName{Proceedings of the ACM on Human-Computer Interaction}%
+  \def\@journalName{Proc. ACM Hum.-Comput. Interact.}%
+  \def\@permissionCodeOne{2573-0142}%
 \or % PACMPL
   \def\@journalName{Proceedings of the ACM on Programming Languages}%
   \def\@journalName{Proc. ACM Program. Lang.}%
@@ -1063,9 +1110,15 @@ Computing Machinery]
 \def\@authornotes{}
 \def\authornote#1{%
   \if@ACM@anonymous\else
-    \g@addto@macro\addresses{\@authornotemark}
+    \g@addto@macro\addresses{\@authornotemark}%
     \g@addto@macro\@authornotes{%
       \stepcounter{footnote}\footnotetext{#1}}%
+  \fi}
+\newcommand\authornotemark[1][\relax]{%
+  \ifx#1\relax\relax\relax
+  \g@addto@macro\addresses{\@authornotemark}%
+  \else
+  \g@addto@macro\addresses{\@@authornotemark{#1}}%
   \fi}
 \def\acmVolume#1{\def\@acmVolume{#1}}
 \acmVolume{1}
@@ -1136,6 +1189,10 @@ Computing Machinery]
   \else
     \ClassInfo{\@classname}{Suppressing folios}%
   \fi}{\ClassError{\@classname}{printfolios must be true or false}}
+\define@cmdkey{@ACM@topmatter@}[@ACM@]{authorsperrow}[0]{%
+  \IfInteger{#1}{\ClassInfo{\@classname}{Setting authorsperrow to
+      #1}}{\ClassWarning{\@classname}{Parameter authorsperrow must be
+      numerical. Ignoring the input #1}\gdef\@ACM@authorsperrow{0}}}
 \def\settopmatter#1{\setkeys{@ACM@topmatter@}{#1}}
 \settopmatter{printccs=true, printacmref=true}
 \if@ACM@manuscript
@@ -1147,6 +1204,7 @@ Computing Machinery]
     \settopmatter{printfolios=false}
   \fi
 \fi
+\settopmatter{authorsperrow=0}
 \def\@received{}
 \newcommand\received[2][]{\def\@tempa{#1}%
   \ifx\@tempa\@empty
@@ -1806,17 +1864,21 @@ Computing Machinery]
 \def\@mkauthors@iii{%
   \author@bx@wd=\textwidth\relax
   \advance\author@bx@wd by -\author@bx@sep\relax
-  \ifcase\num@authorgroups
-  \relax % 0?
-  \or  % 1=one author per row
-  \or  % 2=two authors per row
-     \divide\author@bx@wd by \num@authorgroups\relax
-  \or  % 3=three authors per row
-     \divide\author@bx@wd by \num@authorgroups\relax
-  \or  % 4=two authors per row (!)
-     \divide\author@bx@wd by 2\relax
-  \else % three authors per row
-     \divide\author@bx@wd by 3\relax
+  \ifnum\@ACM@authorsperrow>0\relax
+    \divide\author@bx@wd by \@ACM@authorsperrow\relax
+  \else
+    \ifcase\num@authorgroups
+    \relax % 0?
+    \or  % 1=one author per row
+    \or  % 2=two authors per row
+       \divide\author@bx@wd by \num@authorgroups\relax
+    \or  % 3=three authors per row
+       \divide\author@bx@wd by \num@authorgroups\relax
+    \or  % 4=two authors per row (!)
+       \divide\author@bx@wd by 2\relax
+    \else % three authors per row
+       \divide\author@bx@wd by 3\relax
+    \fi
   \fi
   \advance\author@bx@wd by -\author@bx@sep\relax
   \gdef\@currentauthors{}%
@@ -1851,11 +1913,15 @@ Computing Machinery]
 \def\@mkauthors@iv{%
   \author@bx@wd=\columnwidth\relax
   \advance\author@bx@wd by -\author@bx@sep\relax
-  \ifcase\num@authorgroups
-  \relax % 0?
-  \or  % 1=one author per row
-  \else  % 2=two authors per row
-     \divide\author@bx@wd by 2\relax
+  \ifnum\@ACM@authorsperrow>0\relax
+    \divide\author@bx@wd by \@ACM@authorsperrow\relax
+  \else
+    \ifcase\num@authorgroups
+    \relax % 0?
+    \or  % 1=one author per row
+    \else  % 2=two authors per row
+       \divide\author@bx@wd by 2\relax
+    \fi
   \fi
   \advance\author@bx@wd by -\author@bx@sep\relax
   \gdef\@currentauthors{}%
@@ -1885,7 +1951,8 @@ Computing Machinery]
     \par\raggedright\leftskip=\z@
     \lineskip=1pc\noindent
     \addresses\let\and\@typeset@author@bx\and\par\bigskip\egroup}
-\def\@authornotemark{\g@addto@macro\@currentauthors{\footnotemark}}
+\def\@authornotemark{\g@addto@macro\@currentauthors{\footnotemark\relax}}
+\def\@@authornotemark#1{\g@addto@macro\@currentauthors{\footnotemark[#1]}}
 \def\@mkteasers{%
   \ifx\@teaserfigures\@empty\else
     \def\@teaser##1{\par\bigskip\bgroup

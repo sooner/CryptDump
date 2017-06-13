@@ -1,0 +1,12 @@
+\section{implementation}
+
+In this section, we describe briefly the implementation details of our design. 1.The neweset version of cryptdb do not support stmt, and tpcc-use stmt. We do not currently implement stmt for cryptdb, instead, we first insert plaintext data into cryptdb, dump data into a sql file , and then insert data into cryptdb using the data. mysqldump has default extended insert, but too long do not support. So we reconstruct the data to limit the size of extended insert. We only use warehousre two, and modify the datatype that is not supported by cryptdb. Namely, we change date type to string type, float to integer type, signed integer to integer type. TPCC is the standard benchmark, so we still want to show the resutls based on it. The detailed configuration is aviliable at this site.
+
+For the backup choices, we should parse the metadata structure of cryptdb, and specify the command line arguments for it. This function can be implemented in less than 800 lines of C++ Code, including the testing code. Our future work should make cryptdb stable and add new features to it, the backup code can also change due to that kind of change, but the underlining principal for backup still apply.
+
+To remove rnd, we currently do not implement it. We can only mannualy issue queries to cryptdb and then use the adjustment to find the rnd layer. 
+
+search\citep{song2000practical} algorithm O(n) stream cipher and block cipher operation and introduces little space overhead, so we except it to be similar to the onion DET. According to cryptdb paper, the time is longer. So, we can definately remove one duplicate onion and save space.
+
+
+Current version of cryptdb also remove the layer ope-jion, we implemented it in our version of cryptdb and so the onion ope has three layers. The modified version is available at \citep{practical-cryptdb}. 

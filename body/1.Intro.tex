@@ -1,0 +1,55 @@
+\section{Introduction}
+
+
+With the development of cloud computing, more services are deployed in the cloud. Security is the first issue to taken into consideration when people store their data in the cloud. Encryption is an important technique to ensure data security. However, for a database system, when data is encrypted, it could be hard for people to perform operations on those data. Fortunately, with the help of certain encryption schemes, computing over encrypted data is possible. Cryptedb\citep{popa2011cryptdb}, which was proposed in sosp'11, is such kind of system. Similarity system has been implemented by many companies like google,SAP,Microsoft,and some Startups\citep{cryptdbsite} \citep{kerschbaum2013encrypted}.
+
+
+The idea of computing over encrypted data came from homomphic encryption. Fully Homomorphic enctyption is too expensive\citep{gentry2009fully}, however, to support common database operation, fully homomorphic is not the only way. The main idea of Cryptdb is to use the characteristics of several encryption schemes to support different operations on columns in a relational table.  Since each encryption scheme can only support one operation, to allow multiple operations, each column in the table is duplicated many times according to how many operations each column need to support, and different encryption schemes are applied to each copy. Such data layout allows computing over encrypted data, but incur huge storage overhead at the same time. According to the author\citep{popa2011cryptdb}, experiments with TPC-C showed an increase of 3.76 times of storage size.
+
+Another import issue of a cloud database system is data intergrety. The system may suffer from disk failures or system crash, so database backup is needed for such systems. In fact, operators of a database system may come across problems like Operating system crash, power failure, file system crash or Hardware problem\citep{mysqlbackupdocumentation}.
+
+
+This storage overhead is inevitable when we want to support different operations. However, for a data backup, this duplication is unnecessary since we do not perform operations on the backup.
+
+To reduce storage overhead in backup, data deduplication techniques are ofthen used. In fact, data deduplication has become a standard component for backup systems\citep{fu2015design}. However, for cryptdb, traditional deduplication methods are limited since it could be hard to deduplicate encrypted data, and those methods are unaware of the relations between encrypted data. There are research about deduplicating encrypted data, but they focus on user files in the cloud instead of database systems. 
+
+Cryptedb records how the original tables are encrypted and how the columns are replicated. We call those data metadata in this paper. It stores metadata on the proxy. If we introduce this kind of extra information, data deduplication for backup system can be more efficient. And also, the onion layout of fields allow us to make tradeoff between storage size, recover time, and data security.
+
+
+In this paper, we raise the question that how can we reduce the the overhead of storage with the help of metadata, and that how to use the information to make proper tradeoff. We should consider storage size, security and the time consumed for data recovery. In our work, we propose a new data deduplication method for Cryptdb, which utilizes metadata information to help find duplicates in encrypted data. We implemented a tool called Cryptdbdump and did experiments with TPC-C-MySQL in the newest version of Cryptdb.
+
+
+To realise this, we need to address three main challenges:
+
+1) How to parse the metadata of Cryptdb
+
+2) How  does the time and space overhead change as the onions and layers change
+
+3) How to choose the right onion and layer to make optimal backup
+
+
+To tackle those problems, we need to
+
+1) analyse the structure of metadata in Cryptdb and find duplicates
+
+2) do analysis on different onions and layers of encryption scheme and provide statiscis
+
+3) design a strategy for data backup with the help of metadata and the costs information 
+
+To summarize, we make the following contributions.
+
+1) A full analysis of the cost of each layer and onion in Cryptdb
+
+2) A new data deduplication method for Cryptdb that utilizes metadata information 
+
+3) A strategy for choosing the right portion of data for backup, which taken storage size, 
+
+4) An implementation of data backup tool called Cryptedbdump 
+
+To our knowledge, we are the first to propose a deduplication method for Cryptdb with the help of metadata to reduce storage overhead, and our high level deduplication method can be used together with traditional deduplication techniques like block level comparision \citep{bellare2013message}.
+
+The rest of this paper is structured as follows. In section 2, we introduce the structure of cryptdb and the structure of encryption metadata in the newest version of Cryptdb. Then, we introduction the characteristics of the encryption schemes use in Cryptdb in section 3. And in section 4, we introduce popular data backup and deduplication methods. In section 5, we introduce our design details and results of experiments. In section 6 we introduce related work. And Section 7 concludes the paper.
+\\ \\ \\ 
+
+
+

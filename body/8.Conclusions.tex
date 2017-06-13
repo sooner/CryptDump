@@ -1,0 +1,27 @@
+\section{future work}
+
+\begin{itemize}
+\item[--] More efficient homomorphic encryption algorithms other than pailliar
+\item[--] Deduplication for master-slave replication
+\item[--] Deduplication for distributed database
+\end{itemize}
+
+
+
+\section{Conclusions}
+
+Fully Homomorphic encryption is still not applicable, So researchers proposed encryption schemes that can support only a small set of operations on encrypted data, and use replication to support many operations at the same time. This idea make homomorphic operation possible in database system. In this paper, we found the problem of storage overhead of such kind of systems, and We study Cryptdb, and propose a backup technique that can utilize metadata to find duplicates in encrypted data. We analysed the details of cryptdb, figured out how to use metadata information to find duplicates in the data. Then we analysed the time and storage overhead of the multi-onion structure, and together with this information, we designed a simple strategy that can reduce storage overhead while incurring little time overhead. We implemented a database backup tool for Cryptedb and experiments showed that our tool can reduce storage overhead without exposing plaintext to administors. We also analysed the tradeoff we can make while making a backup.
+
+For Cryptdb, the metadata stored in a local database in the proxy also need to be backed up. For metadata, the owener of data should get hold of it sinced it stores the encryption keys. The proxy can provide information the the server for save back so that data do not get lost, for recovery, this dump should be give to the proxy for reencryption and recovery.
+
+
+In our system, we use statics collected, such as time consumpation for encryption and decryption, to help make decisions. Those information can change with systems. So beform doing a backup, we can first run test to fetch such kind of information and then backup the data.
+
+Also, our design allow user to choose from a set of space security and space overhead. We can actually remove rnd for deduplication and compression, which make our system compitable to compression systems.
+
+We can also make conclusions of several encryption algorithms.
+
+
+\begin{acks}
+  The authors would like to everyone for their help, without which this work would not have been possible. 
+\end{acks}

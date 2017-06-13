@@ -3,7 +3,12 @@
 We evaluate our work in a machine with Intel(R) Xeon (R) CPU E565 2.4GHz in Ubuntu 16.04. 
 
 
+There are two things to evaluate, the first is the storage overhead. It should be noted that storage overhead for logical back up is not the same as the storage overhead in the DBMS. For example, 64 bits integer should occupy 64 bits in the DBMS, However, in logical backup, integer is stored as string, which means the storage overhead is related to the length of the string. For example, the integer 123456 can occupy 48 bits. In our evaluation, we compute the storage overhead based on the string representation as the logical backup tool mysqldump do.
+
+
 Since we may want to remove salt, we first need to konw how fast can we generte a new salt. We do experiment with the function in cryptdb code and find that the computation overhead for one salt is about 0.7 us. So this computation overhead is negligible.
+
+
 
 We need to know how much time is consumed to do computation in each layer. Also for each strategy, we should give the estimated time overhead for recovery, so we should know how time is consumed for each algorithm, and we give uses the choice of each strategy. So, our strategy is to show customers the reencryption overhead. 
 

@@ -3,10 +3,14 @@
 This section introduces the structure of Cryptdb to show how data is duplicated. This introduction is based on the original paper and the newest verion of Cryptdb implementation. We would like to introduce the following content.
 
 1. structure of client, proxy, and MySQL server\\
+
 2. structure of metadata storage\\
+
 3. datalayout \\
 
 This section will give you insight on how we find duplicates in Cryptdb, and important issues to consider when designing a backup system.
+
+
 
 \subsection{The client,server, proxy structure}
 
@@ -15,7 +19,7 @@ In the cryptdb system design, there are three identities, client, server, and pr
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/Cryptdb.png}
+\includegraphics[width=6cm]{images/Cryptdb-structure.pdf}
 \caption{structure of cryptdb}
 \label{fig:stack1}
 \end{figure}

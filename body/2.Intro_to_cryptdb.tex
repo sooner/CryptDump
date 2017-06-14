@@ -3,19 +3,22 @@
 This section introduces the structure of Cryptdb to show how data is duplicated. This introduction is based on the original paper and the newest verion of Cryptdb implementation. We would like to introduce the following content.
 
 1. structure of client, proxy, and MySQL server\\
+
 2. structure of metadata storage\\
+
 3. datalayout \\
 
 This section will give you insight on how we find duplicates in Cryptdb, and important issues to consider when designing a backup system.
 
 \subsection{The client, server, proxy structure}
 
+
 In the cryptdb system design, there are three identities, client, server, and proxy. The Client is the webserver, and the server has MySQL installed. The client communicate with the proxy instead of with the server. The MySQL server is not trusted while the Proxy is trusted. When the client receive DDL queries, it will stored related metadata to describe the encryption schema of each table. For both DML and DDL queries, the proxy perform query rewrite to encrypt the query and send encrypted query to MySQL server. The results are sent to the proxy first for decryption, and then plain text will be sent to client. Figure~\ref{fig:stack1} shows the basic structure of Cryptdb and the traditional database. 
 
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/Cryptdb.png}
+\includegraphics[width=6cm]{images/Cryptdb-structure.pdf}
 \caption{structure of cryptdb}
 \label{fig:stack1}
 \end{figure}

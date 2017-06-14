@@ -4,3 +4,11 @@ sample-sigconf.log
 sample-sigconf.out
 sample-sigconf.pdf
 sample-sigconf.synctex.gz
+acmart.dtx
+acmart.ins
+acmart.log
+sample-bibliography.bib
+sample-sigconf.bbl
+sample-sigconf.blg
+samplebody-conf.log
+

@@ -1,12 +1,12 @@
 \section{Encryption schemes}
 
 
-\subsection{data layers for string type}
+\subsection{data layers for string}
 
-For string type, the newest version of cryptdb only support two onions: DET and OPE. Search was removed. Also, since the onion search has only one layer and it's quit easy to do analysis, we focus on the other two layers
-in this section. For onion DET, the DET layers uses 128bits AEC-CMC encryption, which is a simple wrapper function of AES-CBC. AES-CBC will pad the plaintext if the size of plaintext can not be divided by the block size. For simplicity, in the current inplementation, if the input can be diveded by the block size, the size of the datatype is expanded by one block size. So, as we add more layers to the onion, the size of the datatype keeps increasing. 
+For string type, the newest version of cryptdb only support two onions: DET and OPE. Search was removed. Also, since the onion search has only one layer and it's quite easy to do analysis, we focus on the other two layers
+in this section. For onion DET, the DET layers uses 128 bits AEC-CMC encryption, which is a simple wrapper function of AES-CBC. AES-CBC will pad the plain text if the size of plain text can not be divided by the block size. For simplicity, in the current implementation, if the input can be divided by the block size, the size of the data type is expanded by one block size. Thus, as we add more layers to the onion, the size of the data type keeps increasing. 
 
-For OPE-str, the data type will be transformed to 64 bits integer. Therefore, the characteristic of OPE-str is constrained to 64bits. The for the RND layer, blowfish will be used since the data type is transformed to integer. OPE is used only for comparing and sinced it loses information, we can not decrypt ope-str. So this onion is not suitable for backup. 
+For OPE-str, the data type will be transformed to 64 bits integer. Therefore, the characteristic of OPE-str is constrained to 64bits. The for the RND layer, blowfish will be used since the data type is transformed to integer. OPE is used only for comparing and since it loses information, we can not decrypt ope-str. So this onion is not suitable for backup. 
 
 Figure 3.2 provides illustration of the onions. 
 
@@ -20,7 +20,7 @@ For integer type, cryptdb create three onion: DET, OPE, and HOM. Figure 3.1 show
 
 \subsection{data layout and structure}
 
-In this section, we talk about the onion layout and How an original table is expanded whith a specific onionlayout. Since the only two data type supported for encryption, we will use and imginery table with those two data types. 
+In this section, we talk about the onion layout and How an original table is expanded with a specific onion layout. Since the only two data type supported for encryption, we will use and imginery table with those two data types. 
 
 
 

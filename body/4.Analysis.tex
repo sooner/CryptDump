@@ -1,5 +1,6 @@
 \section{Our Analysis}
 
+
 In this section, we will analyze the details of each onion design. As we stated before, Based on those analysis, we propose backup strategies for each data type accordingly. Intuitively, the strategy is to the find the smallest onion to backup and recover. In this discussion, we will focus on backup for each column, and the situation for a table should be the same. 
 % The onion 'search' for string is not yet implemented in the newest version of CryptDB, so for this onion, our analysis is based on the description in \citep{song2000practical}.
 
@@ -48,7 +49,7 @@ The above discussion reveals two facts:
 
 \begin{itemize}
 \item[--] The size of Onion OPE can not exceed 32 Bytes regardless of the size of plaintext
-\item[--] Onion OPE can loose information of the plaintext, so we can not use the Onion OPE
+\item[--] Onion OPE can lose information of the plaintext, so we can not use the Onion OPE
 \end{itemize}
 
 

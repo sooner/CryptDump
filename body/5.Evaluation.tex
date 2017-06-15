@@ -1,3 +1,4 @@
+
 \section{Evaluation}
 
 We evaluate our work in a machine with Intel(R) Xeon (R) CPU E565 2.4GHz in Ubuntu 16.04. 
@@ -11,7 +12,7 @@ First, we evaluate the time overhead.  Recall that we may want to remove salt, s
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/aes.png}
+\includegraphics[width=4cm]{images/aes.eps}
 \caption{Aes time consumpation}
 \label{fig:stack9}
 \end{figure}
@@ -36,7 +37,7 @@ For integer data, as we mentioned before, the columns are replicated three time 
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/sizeofeachonion.png}
+\includegraphics[width=4cm]{images/size-of-each-onion.eps}
 \caption{Size of onion for integer type}
 \label{fig:stack11}
 \end{figure}
@@ -47,7 +48,7 @@ For string type, we do experiment with a simple table of varchar(10). After encr
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/sizeofstr.png}
+\includegraphics[width=4cm]{images/det-rnd.eps}
 \caption{size of onion for string type}
 \label{fig:stack12}
 \end{figure}

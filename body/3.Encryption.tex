@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 \section{Encryption schemes}
 
 
@@ -32,18 +34,15 @@ In this section, we talk about the onion layout and How an original table is exp
 \end{figure}
 
 
+>>>>>>> c5d60e558f2f1c9d57ca14413761082b2926f21a
 \section{database backup methods and deduplication}
 
-Data backup is an important functionality of database systems. All the popular database systems have backup methods. Based on how the backup is stored, we can can have two categorities of backup methods: logical backup and physical backup. Backup tools focus on low storage overhead and fast recovery. Since we do experiment with MySQL, this section focus on backup methods for MySQL. Other systems will be similar. We use backup to deal with disasters. In this section, we introduce popular backup methods. Typical backup methods also provide functions like encryption for security and compression for saving disk space.GPG tools is used for encryption.
-
+Data backup is an important functionality for database systems. All the popular database systems have backup methods. Based on how the backup is stored, we can can have two categorities of backup methods: logical backup and physical backup. Backup tools focus on low storage overhead and fast recovery. Since we do experiment with MySQL, this section focus on backup methods for MySQL. Other systems will be similar. We use backup to deal with disasters. In this section, we introduce popular backup methods. Typical backup methods also provide functions like encryption for security and compression for saving disk space.GPG tools is used for encryption.
 
 
 \subsection{logical backup}
 
 Logical backup save information in the form of SQL queries \citep{mysqlbackupdocumentatio}. For Logical backup, it's easy to control the backup granularity, and it's highly portable since the backup is in text format. MySQLdump and MySQLdumper\citep{mysqldumpper} are examples of Logical backup tools. We can also use SELECT .. INTO OUTFILE to create delimited-text files for logical backup. The basic process of logical backup is first to use select queries to pull data from the MySQL-server, and then use the data to construct Insert queries and save them into a text file. Also, Create table queries will be saved into files for recovery. We can also categorize backup method by other creterions, since we can about storage size and the logical deduplcation, we only discuss two types of backup here.
-
-
-
 
 
 Here we describe a typical logical backup command.
@@ -53,10 +52,6 @@ Here we describe a typical logical backup command.
 \item[--] mkdir /backups/mysqldump
 \item[--] mysqldump --single-transaction --all-databases |gzip > /backups/mysqldump/today.sql.gz 
 \end{itemize}
-
-
-
-
 
 
                                                  
@@ -106,4 +101,6 @@ The recovery form physical backup is easy. Just to uncompress the backup files a
 
 
 We can find that logical backup allow user to find duplicate in the database directly, so in our design, we give our design based on logical backup.
+
+
 

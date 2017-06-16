@@ -8,7 +8,7 @@ In CryptDB, each column in a table can be encrypted into several onions. Each on
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=\columnwidth]{images/onions-for-string.png}
+\includegraphics[width=\columnwidth]{images/onions-for-string.eps}
 \caption{onions-for-string}
 \label{fig:stack4}
 \end{figure}
@@ -90,19 +90,14 @@ Based on the principals, we proposes the following strategies for String data an
 
 For those two data types and strategy, we construct microbenchmark to do experiments. Actually, the time needed for recovery can be reduced by using multi-threading or other optimization. We assumes that other factors are the same and only condiser the overhead of recomputation. We use single thead whith pipeline insert.
 
-So, the overall strategy looks like the following: we let users choose the strategy bases on the what they care about. They can either choose to backup all the onions, or choose to have minimum backup or something in between. Figure~\ref{fig:stack7} and Figure~\ref{fig:stack8} shows how to encrypt and extend the plain text, and then choose one onion for back up, and then compress the onion. For recovery, we should first decrypt the onions and then recompute the deleted onion. Then we should be able to construct the sql queris for recovery. This is the same as the logical backup recovery method.
+So, the overall strategy looks like the following: we let users choose the strategy bases on the what they care about. They can either choose to backup all the onions, or choose to have minimum backup or something in between. Figure~\ref{fig:stack7} shows how to encrypt and extend the plain text, and then choose one onion for back up, and then compress the onion. For recovery, we should first decrypt the onions and then recompute the deleted onion. Then we should be able to construct the sql queris for recovery. This is the same as the logical backup recovery method.
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/Workflow.jpg}
+\includegraphics[width=8cm]{images/backup_and_recovery.pdf}
 \caption{Backup and compression}
 \label{fig:stack7}
 \end{figure}
 
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=4cm]{images/Recovery.jpg}
-\caption{Aes encryption and decryption time}
-\label{fig:stack8}
-\end{figure}
+

@@ -1,24 +1,26 @@
-\section{Encryption Overhead}
+\section{Space Overhead of Backup}
 
-CryptDB creates multiple onions for each data item in DBMSes to support different kinds of computations. These onions of decryption trade several times of space in DBMSes for security and performance. However, for backup and recovery, there is no SQL queries and computations execute on these backup data. Multiple onions actually carry redundant information from the perspective of backup. We only need backup one of onions for each data item considering their functionality and space overhead. As a result, we need to figure out \textit{how to find the best onion to backup and recover}.  
+CryptDB creates multiple onions for each data item in DBMSes to support different kinds of computations. These onions of decryption trade several times of space in DBMSes for security and performance. However, for backup and recovery, there is no SQL queries and computations execute on these backup data. Multiple onions actually carry redundant information from the perspective of backup. We only need backup \textit{some} onions for each data item while maintaining their functionality and reducing space overhead. 
+% As a result, we need to figure out \textit{how to find the best onion to backup and recover}.  
 % The onion 'search' for string is not yet implemented in the newest version of CryptDB, so for this onion, our analysis is based on the description in \citep{song2000practical}.
 
-CryptDB currently only supports two data types with three encryption schemes for each: string(DET, OPE, SEARCH) and integer(DET, OPE, HOM). We will analysis each encryption scheme separately and present the findings in the end.
+CryptDB currently only supports two data types with three encryption schemes for each: string(DET, OPE, SEARCH) and integer(DET, OPE, HOM). We will analysis space overhead of each encryption scheme separately and present the findings in the end.
 
 \subsection{DET}
-DET is the only scheme supports both string and integer and could store the complete information of data items for backup and recovery. Onion DET has three layers, namely DET-JOIN, DET, and DET-RND. 
+DET is the only scheme supports both string and integer and also store the complete information of data items for backup and recovery. Onion DET has three layers, namely DET-JOIN, DET, and DET-RND. 
 
 \textbf{Integer}. DET for integer uses algorithm named blowfish. The size of the ciphertext is always 64 bits. Therefore, the space overhead is constant.
 
-\textbf{String}. DET for string is not the same esay as integer. To figure out the relationship between the size of plaintext and the size of ciphertext of different layers of DET, we encrypt two plain texts of 10 bytes and 1000 bytes. As illustrated in figure~\ref{fig:stack4},  for the 10 bytes text, the size of ciphertext of DET-JOIN, DET, DET-RND are 16 bytes, 32 bytes, and 48 bytes accordingly. For the 1000 bytes text, the size are 1008 bytes, 1024 bytes and 1048 bytes accordingly. It is straightforward to find out that the size difference among different ciphertexts is the same. They are all 16 bytes. The only special case is between plain text and ciphertext of DET-JOIN. We analysis the algorithms of DET and realize that the first two layers of DET uses AES-CMC for encryption, and the third layer uses AES\_CBC. These three algorithms all execute on blocks, which is now 16 bytes in the implementation of CryptDB. If the input text of the algorithm can not be divided exactly by the block size, the input will be padded with zero to make it divisible. If the input text is divisible, CryptDB will pad the text by one block. 
+\textbf{String}. DET for string is not the same esay as integer. To figure out the relationship between the size of plaintext and the size of ciphertext of different layers of DET, we encrypt two plain texts of 10 bytes and 1000 bytes. As illustrated in figure~\ref{fig:side:a},  for the 10 bytes text, the size of ciphertext of DET-JOIN, DET, DET-RND are 16 bytes, 32 bytes, and 48 bytes accordingly. For the 1000 bytes text, the size are 1008 bytes, 1024 bytes and 1048 bytes accordingly. It is straightforward to find out that the size difference among different ciphertexts is the same. They are all 16 bytes. The only special case is between plain text and ciphertext of DET-JOIN. We analysis the algorithms of DET and realize that the first two layers of DET uses AES-CMC for encryption, and the third layer uses AES\_CBC. These three algorithms all execute on blocks, which is now 16 bytes in the implementation of CryptDB. If the input text of the algorithm can not be divided exactly by the block size, the input will be padded with zero to make it divisible. If the input text is divisible, CryptDB will pad the text by one block. 
 
+\textbf{Finding 1:} \textit{The space overhead of DET for integer keeps constant regardless of the size of plaintext;}
 
+\textbf{Finding 2:} \textit{No matter how large is the size of plaintext, the size of ciphertext of each layer takes the min-max value which is divisible by 16.}
 
 \subsection{HOM}
-HOM only supports integer and uses pailliar algorithm. Like DET for integer, the size of ciphertext of HOM is always 256 bytes. Compare to the maximum size of integer(8 bytes) in MySQL, it introduces 31x space overhead for the system.
+HOM only supports integer and uses algorithm named pailliar. Like DET for integer, the size of ciphertext of HOM is always 256 bytes, which introduces great space overhead to the system. Take the new\_orders table in TPC-C benchmark for example, it has three columns of integer type: int(4 Bytes), tinyint(1 Byte), smallint(2 Bytes). The original table owns 9,000 rows of data and takes 88 KB. After encrypted by HOM, the table increases to 8.5 MB, which are two orders of magnitude larger than the original one.
 
-\subsection{SEARCH}
-SEARCH is quiet simple: it has only two layers, and according to \citep{song2000practical}, the size of ciphertext is roughly the same as plaintext.
+\textbf{Finding 3:} \textit{The ciphertext of HOM is always 256 bytes and space overhead linear correlated with the number of rows of the table.}
 
 \subsection{OPE}
 OPE requires that the cipher text size is double the size of plain text. 
@@ -116,15 +118,15 @@ OPE requires that the cipher text size is double the size of plain text.
 % Then let's talk about OPE-STR. OPE-STR can also have three layers, OPE-STR-JOIN, OPE-STR, OPE-RND. When the input of the algorithm is a string, plaintext length of 4 Bytes and  ciphertext length of 8 Bytes are specified. That is, only the prefix are encrypted and has the properity of order preserving. Then in the layer OPE-STR, since in the first layer, the data type has been transformed to 64bits integer, the OPE-STR is transformed to OPE-INT, and the input is 64bits long. So after this layer, integer can no longer fit ciphertext. The data type has become 128 bits varbinary type. And then in the third layer, aes is used for the layer, adding one block to the size, making the total size of the onion 32 Bytes.
 
 
-For OPE, we get two important findings:
+\textbf{Finding 4:} \textit{The size of onion OPE can not exceed 32 Bytes regardless of the size of plaintext};
 
+\textbf{Finding 5:} \textit{Onion OPE can lose information of the plaintext, so we can not use the Onion OPE for backup and recovery}.
 
-\textbf{Finding 1:} \textit{The size of onion OPE can not exceed 32 Bytes regardless of the size of plaintext};
+\subsection{SEARCH}
+SEARCH is quiet simple: it has only two layers. According to \citep{song2000practical}, the size of ciphertext is roughly the same as plaintext.
 
-\textbf{Finding 2:} \textit{Onion OPE can lose information of the plaintext, so we can not use the Onion OPE for backup and recovery}.
-
-\section{Insight for Backup Deduplication}
-As we have known the property of the encryption schemes and the data layout. We can now start to design the strategy of deduplication. We will first discuss each onion and then give three simple strategies for analysis. Then in the experiment section, we will use our workload to test the strategies. We first discuss the design choices for each onion of interger data and string data. 
+\section{Computation Overhead of Recovery}
+As we have known the property of the encryption schemes and the data layout. We can now start to design the strategy of deduplication. We will first discuss each onion and then give three simple strategies for analysis. Then in the experiment section, we will use our workload to test the strategies. We first discuss the design choices for each onion of integer data and string data. 
 
 
 \begin{itemize}
@@ -135,19 +137,19 @@ As we have known the property of the encryption schemes and the data layout. We 
 \end{itemize}
 
 
-
+\section{Strategies for Deduplication}
 Since the detailed performance is related to so many things, we do not provide exact strategy for backup. Instead, we summarize several Principals for cryptdb backup and then give some examples. 
 
 \begin{itemize}
-\item One original field is replicated several times and encrypted with different schemes
-\item If we want mininum storage overhead, then for each field we can find the onion with the least size, like AES or blowfish, that can produce ciphertext of the size similar to plaintext, and remove all other onions. If we want minimum time overhead, we should backup all the onions, so that we can recover the data directly. Other choices are something in between.
+\item If you want minimum storage overhead, you should find the onion with the least size for each column, like AES or blowfish, that can produce ciphertext of the size similar to plaintext, and remove all the other onions. 
+\item If you want minimum time overhead, you should backup all the onions, so that you can recover the data directly.
 \item Metadata should have a full backup for data recovery, and the size of metadata is small. 
 \item For recovery, we need to decrypt the onion we have, and based on the metadata, recompute the ciphertext for other onions.
 \item For one onion, we can choose the stay in RND layers, which means identical plaintext can have different ciphertext. If we decypt it to a layer that is not random, then identical plaintext can have the same ciphertext. If most of the plain text in this column are the same, then it will be easy to compress this filed to reduce storage overhead. Also, if we decrypt RND layer, then we can remove the IV column, which further reduces storage overhead.
 \end{itemize}
 
 
-Based on the principals, we proposes the following strategies for String data and Integer data. 
+Based on these principals, we propose following suggestions for backup and recovery on CryptDB. 
 
 \begin{itemize}
 \item Remove RND and use DET onion will produce the least storage overhead.
@@ -155,12 +157,9 @@ Based on the principals, we proposes the following strategies for String data an
 \item Retain RND and salt for DET, remove HOM and OPE, and Search. This method has high security level.
 \end{itemize}
 
+For those two data types and strategy, we construct microbenchmark to do experiments. Actually, the time needed for recovery can be reduced by using multi-threading or other optimization. We assumes that other factors are the same and only consider the overhead of recomputation. We use single thread with pipeline insert.
 
-
-
-For those two data types and strategy, we construct microbenchmark to do experiments. Actually, the time needed for recovery can be reduced by using multi-threading or other optimization. We assumes that other factors are the same and only condiser the overhead of recomputation. We use single thread with pipeline insert.
-
-So, the overall strategy looks like the following: we let users choose the strategy bases on the what they care about. They can either choose to backup all the onions, or choose to have minimum backup or something in between. Figure~\ref{fig:stack7} shows how to encrypt and extend the plain text, and then choose one onion for back up, and then compress the onion. For recovery, we should first decrypt the onions and then recompute the deleted onion. Then we should be able to construct the sql queris for recovery. This is the same as the logical backup recovery method.
+% The overall strategy looks like: we let users choose the strategy base on what they care about. They can either choose to backup all the onions, or choose to have minimum backup or something in between. Figure~\ref{fig:stack7} shows how to encrypt and extend the plain text, and then choose one onion for back up, and then compress the onion. For recovery, we should first decrypt the onions and then recompute the deleted onion. Then we should be able to construct the sql queries for recovery. This is the same as the logical backup recovery method.
 
 \begin{figure}[tb]
 \centering

@@ -1,13 +1,13 @@
 
 \section{Evaluation}
 
-We evaluate our work in a machine with Intel(R) Xeon (R) CPU E565 2.4GHz in Ubuntu 16.04. 
+Our experiments are performed on a machine with Intel(R) Xeon (R) CPU E565 2.4GHz in Ubuntu 16.04. 
 
 
-There are two things to evaluate, the first is the storage overhead, and the second is the time comsumed for recovery. It should be noted that storage overhead for logical back up is not the same as the storage overhead in the DBMS since they use different data representation. For example, 64 bits integer should occupy 64 bits in the DBMS, However, in logical backup, integer is stored as string, which means the storage overhead is related to the length of the string. For example, the integer 123456789 can occupy 72 bits. In our evaluation, we compute the storage overhead based on the string representation as the logical backup tool mysqldump do. For time consumpation, we choose to first evaluate each kind of encryption algorithms and then give the estimated time overhead for recovery. We do not evaluate the total time consumpation for recovery since different logical backup tools can have different recovery speed, this speed is influenced by implementation optimizations like multi-threading or batch insert, which are not related to our topic. So we only estimate the time for recovering to the logical representation of the data. 
+There are two things to evaluate, the first is the storage overhead, and the second is the time consumed for recovery. It should be noted that storage overhead for logical back up is not the same as the storage overhead in the DBMS since they use different data representation. For example, 64 bits integer should occupy 64 bits in the DBMS, However, in logical backup, integer is stored as string, which means the storage overhead is related to the length of the string. For example, the integer 123456789 can occupy 72 bits. In our evaluation, we compute the storage overhead based on the string representation as the logical backup tool mysqldump do. For time consumpation, we choose to first evaluate each kind of encryption algorithms and then give the estimated time overhead for recovery. We do not evaluate the total time consumpation for recovery since different logical backup tools can have different recovery speed, this speed is influenced by implementation optimizations like multi-threading or batch insert, which are not related to our topic. So we only estimate the time for recovering to the logical representation of the data. 
 
 
-First, we evaluate the time overhead.  Recall that we may want to remove salt, so we first need to konw how fast can we regenerte a new salt. We do experiment with the function in cryptdb code and find that the computation overhead for one salt value is around 0.7 us. So this computation is quite fast and thus negligible. We also need to know how much time is consumed to do computation in each layer, so we do experiment for those algorithms.
+First, we analyze the overhead of time.  Recall that we may want to remove salt, so we first need to know how fast can we regenerate a new salt. We do experiment with the function in CryptDB and find that the computation overhead for one salt value is around 0.7 $\mu$s. So this computation is quite fast and the overhead could be ignored. We also need to know how much time is consumed to do computation in each layer, so we do experiment for those algorithms.
 
 
 \begin{figure}   
@@ -15,13 +15,13 @@ First, we evaluate the time overhead.  Recall that we may want to remove salt, s
     \centering   
     \includegraphics[width=4.0cm]{images/aes.eps}   
     \caption{Small Box}   
-    \label{fig:side:a}   
+    \label{fig:stack9}   
   \end{minipage}%   
   \begin{minipage}[t]{0.5\linewidth}   
     \centering   
     \includegraphics[width=4.0cm]{images/time.eps}   
     \caption{Big Box}   
-    \label{fig:side:b}   
+    \label{fig:stack10}   
   \end{minipage}   
 \end{figure}
 
@@ -43,9 +43,9 @@ First, we evaluate the time overhead.  Recall that we may want to remove salt, s
 % \end{figure}
 
 
-Figure~\ref{fig:stack9} shows the time consumpation for encryption and decryption for AES-CBC and AES-CMC. AES-CBC is a simple wrapper of AES function in the open-ssl library, and AES-CMC is a wrapper of AES-CBC  which internally calls AES-CBC twice. So the time for encryption and decryption of AES-CMC is roughly twice that of AES-CBC, and the time consumpation is almost proportional to the size of plaintext. Figure~\ref{fig:stack10} shows the encryption and decryption time for pailliar, blowfish, and the order preserving encryption. We can find that blowfish, which operate on 64 bits integer, is fast. OPE is also fast. HOM, which uses pailliar, is slow. 9.1ms is used for encryption, which means the throughput of inserting one column of integer is limited to around 100 rows per second.
+Figure~\ref{fig:stack9} shows the time consumption for encryption and decryption for AES-CBC and AES-CMC. AES-CBC is a simple wrapper of AES function in the open-ssl library, and AES-CMC is a wrapper of AES-CBC  which internally calls AES-CBC twice. So the time for encryption and decryption of AES-CMC is roughly twice that of AES-CBC, and the time consumption is almost proportional to the size of plaintext. Figure~\ref{fig:stack10} shows the encryption and decryption time for pailliar, blowfish, and the order preserving encryption. We can find that blowfish, which operate on 64 bits integer, is fast. OPE is also fast. HOM, which uses pailliar, is slow. 9.1ms is used for encryption, which means the throughput of inserting one column of integer is limited to around 100 rows per second.
 
-We now begin to analyse the two type of data that is supported by cryptdb.We create one simple table with only one field, and backup that encrypted data, and show the size of each encrypted onion. Note that this is not exactly the same as logical backup since in logical back, data is in the form of sql queries. We do not backup the data in SQL query form because the logically deduplicated queries, which are not complete, can not execute on the DBMS directly. So we choose to backup each column separately, something like the 'SELECT into file' method.
+We now begin to analyze the two type of data that is supported by CryptdDB. We create one simple table with only one field, and backup that encrypted data, and show the size of each encrypted onion. Note that this is not exactly the same as logical backup since in logical back, data is in the form of sql queries. We do not backup the data in SQL query form because the logically deduplicated queries, which are not complete, can not execute on the DBMS directly. So we choose to backup each column separately, something like the 'SELECT into file' method.
 
 For integer data, as we mentioned before, the columns are replicated three time for three onions with an additional salt column for the decrypting the layer RND. We insert 1,000,000 integers, all of them are simple 12345. Figure~\ref{fig:stack11} shows the size of each onion when backed up. We dump each column into separate files and use 'du -h' to find the size of each column when in string representation. We can find that HOM is the biggest, since it's data type: varbinary(256), when in string representation, occupies large space. IV is random 64 bits integer, DET is also random 64 bits integer, so they are of similar size. OPE is larger than DET, since the type is varbinary(32) in rnd layer. 
 
@@ -118,7 +118,7 @@ For string type, we do experiment with a simple table of varchar(10). After encr
 We also give the expected recovery time for each onion based on the assumpation that we only backup the Onion DET. Figure~\ref{fig:stack12} depicts the results.
 
 
-Finally we do experiment with the TPCC-MySQL, Figure~\ref{fig:stack13} depicts the results. As we have mentioned, analysing a table can be easy since the characteristics of each column is known. 
+Finally we do experiment with the TPCC-MySQL, Figure~\ref{fig:stack13} depicts the results. As we have mentioned, analyzing a table can be easy since the characteristics of each column is known. 
 
 % \begin{figure}[tb]
 % \centering
@@ -131,6 +131,6 @@ Finally we do experiment with the TPCC-MySQL, Figure~\ref{fig:stack13} depicts t
 
 
 
-Based on the above results, we can find that, in the current implementation of Cryptdb, Onion OPE is always small and can not be used for recovering, So OPE can be removed  to save space. For integers, the onion HOM is large, and also taken a long time to recover, So If we remove HOM for deduplication, and use the onion DET for recovering the data, we can save a lot space while paying the overhead of recomputing the onion HOM. If we can find ways to accelerate the computation of pailliar, then this deduplication can be more efficient. The onion DET-INT uses blowfish, which is fast and occupy little space compared to the plaintext, so it's reasonable to retain this onion. Decrypting the layer RND-int should reduce the size by half since we no longer need the IV column, so we can remove this column. Also, decrypting the RND-int layers can produce higher compression ratio. Things are similar for string type. String type has a search onion, which is expected to be similar to onion DET. So if we remove search, we expect to reduce the size by half. If we then remove the RND-STR layer, we also get higher compression ratio. In \citep{popa2015guidelines}, new onions are added in cryptdb, this can leave more space for deduplication.
+Based on the above results, we can find that, in the current implementation of CryptDB, Onion OPE is always small and can not be used for recovering, So OPE can be removed  to save space. For integers, the onion HOM is large, and also taken a long time to recover, So If we remove HOM for deduplication, and use the onion DET for recovering the data, we can save a lot space while paying the overhead of recomputing the onion HOM. If we can find ways to accelerate the computation of pailliar, then this deduplication can be more efficient. The onion DET-INT uses blowfish, which is fast and occupy little space compared to the plaintext, so it's reasonable to retain this onion. Decrypting the layer RND-int should reduce the size by half since we no longer need the IV column, so we can remove this column. Also, decrypting the RND-int layers can produce higher compression ratio. Things are similar for string type. String type has a search onion, which is expected to be similar to onion DET. So if we remove search, we expect to reduce the size by half. If we then remove the RND-STR layer, we also get higher compression ratio. In \citep{popa2015guidelines}, new onions are added in CryptDB, this can leave more space for deduplication.
 
 

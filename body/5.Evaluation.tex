@@ -10,22 +10,37 @@ There are two things to evaluate, the first is the storage overhead, and the sec
 First, we evaluate the time overhead.  Recall that we may want to remove salt, so we first need to konw how fast can we regenerte a new salt. We do experiment with the function in cryptdb code and find that the computation overhead for one salt value is around 0.7 us. So this computation is quite fast and thus negligible. We also need to know how much time is consumed to do computation in each layer, so we do experiment for those algorithms.
 
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=8cm]{images/aes.eps}
-\caption{Aes time consumpation}
-\label{fig:stack9}
+\begin{figure}   
+  \begin{minipage}[t]{0.5\linewidth}  
+    \centering   
+    \includegraphics[width=4.0cm]{images/aes.eps}   
+    \caption{Small Box}   
+    \label{fig:side:a}   
+  \end{minipage}%   
+  \begin{minipage}[t]{0.5\linewidth}   
+    \centering   
+    \includegraphics[width=4.0cm]{images/time.eps}   
+    \caption{Big Box}   
+    \label{fig:side:b}   
+  \end{minipage}   
 \end{figure}
 
+% \begin{figure}[tb]
+% \centering
+% \includegraphics[width=8cm]{images/aes.eps}
+% \caption{Aes time consumpation}
+% \label{fig:stack9}
+% \end{figure}
 
 
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=8cm]{images/time.eps}
-\caption{time consumpation}
-\label{fig:stack10}
-\end{figure}
+
+% \begin{figure}[tb]
+% \centering
+% \includegraphics[width=8cm]{images/time.eps}
+% \caption{time consumpation}
+% \label{fig:stack10}
+% \end{figure}
 
 
 Figure~\ref{fig:stack9} shows the time consumpation for encryption and decryption for AES-CBC and AES-CMC. AES-CBC is a simple wrapper of AES function in the open-ssl library, and AES-CMC is a wrapper of AES-CBC  which internally calls AES-CBC twice. So the time for encryption and decryption of AES-CMC is roughly twice that of AES-CBC, and the time consumpation is almost proportional to the size of plaintext. Figure~\ref{fig:stack10} shows the encryption and decryption time for pailliar, blowfish, and the order preserving encryption. We can find that blowfish, which operate on 64 bits integer, is fast. OPE is also fast. HOM, which uses pailliar, is slow. 9.1ms is used for encryption, which means the throughput of inserting one column of integer is limited to around 100 rows per second.
@@ -35,32 +50,69 @@ We now begin to analyse the two type of data that is supported by cryptdb.We cre
 For integer data, as we mentioned before, the columns are replicated three time for three onions with an additional salt column for the decrypting the layer RND. We insert 1,000,000 integers, all of them are simple 12345. Figure~\ref{fig:stack11} shows the size of each onion when backed up. We dump each column into separate files and use 'du -h' to find the size of each column when in string representation. We can find that HOM is the biggest, since it's data type: varbinary(256), when in string representation, occupies large space. IV is random 64 bits integer, DET is also random 64 bits integer, so they are of similar size. OPE is larger than DET, since the type is varbinary(32) in rnd layer. 
 
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=8cm]{images/size-of-each-onion.eps}
-\caption{Size of onion for integer type}
-\label{fig:stack11}
+% \begin{figure}[tb]
+% \centering
+% \includegraphics[width=8cm]{images/size-of-each-onion.eps}
+% \caption{Size of onion for integer type}
+% \label{fig:stack11}
+% \end{figure}
+
+
+
+\begin{figure}   
+  \begin{minipage}[t]{0.5\linewidth}  
+    \centering   
+    \includegraphics[width=4.0cm]{images/size-of-each-onion.eps}   
+    \caption{Small Box}   
+    \label{fig:side:a}   
+  \end{minipage}%   
+  \begin{minipage}[t]{0.5\linewidth}   
+    \centering   
+    \includegraphics[width=4.0cm]{images/det-rnd.eps}   
+    \caption{Big Box}   
+    \label{fig:side:b}   
+  \end{minipage}   
 \end{figure}
+
+
+
 
 
 For string type, we do experiment with a simple table of varchar(10). After encryption, the onion DET will be tranformed to varbinary(48) due to the padding, and OPE will be varbinary(32), salt should be big int. We insert 1,000,000 plaintext of length 10 into the table, and the Figure~\ref{fig:stack12} depicts the results for each column.We can find that even for very short string, three layer of encryption in onion DET can make it larger than the onion OPE. So ope is always assumed  smaller than DET. And the size of salt remains the same as in the experiment with integers. We can find that decrypting the RND layer can produce greater compression ratio. We use gizp with default options. This is an extream case since all the data in the columns are the same. For a big column with low Cardinality, like gender, this approach is expected to produce similar results. 
 
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=8cm]{images/det-rnd.eps}
-\caption{size of onion for string type}
-\label{fig:stack12}
+% \begin{figure}[tb]
+% \centering
+% \includegraphics[width=8cm]{images/det-rnd.eps}
+% \caption{size of onion for string type}
+% \label{fig:stack12}
+% \end{figure}
+
+
+
+\begin{figure}   
+  \begin{minipage}[t]{0.5\linewidth}  
+    \centering   
+    \includegraphics[width=4.0cm]{images/aftercompression.eps}   
+    \caption{Small Box}   
+    \label{fig:side:a}   
+  \end{minipage}%   
+  \begin{minipage}[t]{0.5\linewidth}   
+    \centering   
+    \includegraphics[width=4.0cm]{images/tpcc.png}   
+    \caption{Big Box}   
+    \label{fig:side:b}   
+  \end{minipage}   
 \end{figure}
 
 
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=8cm]{images/aftercompression.eps}
-\caption{size of onion for string type}
-\label{fig:stack12}
-\end{figure}
+% \begin{figure}[tb]
+% \centering
+% \includegraphics[width=8cm]{images/aftercompression.eps}
+% \caption{size of onion for string type}
+% \label{fig:stack12}
+% \end{figure}
 
 
 We also give the expected recovery time for each onion based on the assumpation that we only backup the Onion DET. Figure~\ref{fig:stack12} depicts the results.
@@ -68,12 +120,12 @@ We also give the expected recovery time for each onion based on the assumpation 
 
 Finally we do experiment with the TPCC-MySQL, Figure~\ref{fig:stack13} depicts the results. As we have mentioned, analysing a table can be easy since the characteristics of each column is known. 
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=8cm]{images/tpcc.png}
-\caption{tpcc data}
-\label{fig:stack13}
-\end{figure}
+% \begin{figure}[tb]
+% \centering
+% \includegraphics[width=8cm]{images/tpcc.png}
+% \caption{tpcc data}
+% \label{fig:stack13}
+% \end{figure}
 
 
 

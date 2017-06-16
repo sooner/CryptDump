@@ -15,10 +15,9 @@ The decryption keys will be kept in proxy servers where we trust so the DBMS ser
 % In the cryptdb system, there are three components: client, server, and proxy. The Client is usually a webserver, and the server has MySQL  or other DBMS installed. In our current environment, we use MySQL5.7 as DBMS and MySQL-Proxy0.8.5 as proxy. The client communicate with the proxy instead of communicating directly with the server. The MySQL server is not trusted while the Proxy is trusted. When the client receive DDL queries, it will stored related encryption metadata to describe the encryption scheme of each table. For both DML and DDL queries, the proxy perform query rewrite to encrypt the query and send encrypted query to MySQL server. The results are sent to the proxy first for decryption, and then plain text will be sent to client. Figure~\ref{fig:stack1} shows the four steps of executing a SQL query in a system using Cryptdb and the two steps of executing SQL queries in a system using normal database system.
 
 
-
 \begin{figure}[tb]
 \centering
-\includegraphics[width=\columnwidth]{images/Cryptdb-structure.pdf}
+\includegraphics[width=6cm]{images/Cryptdb-structure2.pdf}
 \caption{structure of cryptdb}
 \label{fig:stack1}
 \end{figure}

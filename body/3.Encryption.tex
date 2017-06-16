@@ -1,48 +1,46 @@
-\subsection{Database Backup}
+\subsection{Backup}
 
 Data backup is an important functionality for database systems. All the popular database systems have their own backup methods. Based on how the backup is stored, we can can have two categories of backup methods: logical backup and physical backup. Backup tools focus on low storage overhead and fast recovery. Since we do experiment with MySQL, this section focus on backup methods for MySQL. Other systems will be similar. We use backup to deal with disasters. In this section, we introduce popular backup methods. Typical backup methods also provide functions like encryption for security and compression for saving disk space.GPG tools is used for encryption.
 
 
-\subsection{logical backup}
-
-Logical backup save information in the form of SQL queries \citep{mysqlbackupdocumentatio}. For Logical backup, it's easy to control the backup granularity, and it's highly portable since the backup is in text format. MySQLdump and MySQLdumper\citep{mysqldumpper} are examples of Logical backup tools. We can also use SELECT .. INTO OUTFILE to create delimited-text files for logical backup. The basic process of logical backup is first to use select queries to pull data from the MySQL-server, and then use the data to construct Insert queries and save them into a text file. Also, Create table queries will be saved into files for recovery. We can also categorize backup method by other creterions, since we can about storage size and the logical deduplcation, we only discuss two types of backup here.
+\textbf{Logical backup} save information in the form of SQL queries \citep{mysqlbackupdocumentatio}. For Logical backup, it's easy to control the backup granularity, and it's highly portable since the backup is in text format. MySQLdump and MySQLdumper\citep{mysqldumpper} are examples of Logical backup tools. We can also use SELECT .. INTO OUTFILE to create delimited-text files for logical backup. The basic process of logical backup is first to use select queries to pull data from the MySQL-server, and then use the data to construct Insert queries and save them into a text file. Also, Create table queries will be saved into files for recovery. We can also categorize backup method by other creterions, since we can about storage size and the logical deduplcation, we only discuss two types of backup here.
 
 
-Here we describe a typical logical backup command.
+% Here we describe a typical logical backup command.
 
 
-\begin{itemize}
-\item[--] mkdir /backups/mysqldump
-\item[--] mysqldump --single-transaction --all-databases |gzip > /backups/mysqldump/today.sql.gz 
-\end{itemize}
+% \begin{itemize}
+% \item[--] mkdir /backups/mysqldump
+% \item[--] mysqldump --single-transaction --all-databases |gzip > /backups/mysqldump/today.sql.gz 
+% \end{itemize}
 
 
                                                  
 
 As we can see, we can create a directory and use simple mysqldump command and options to backup our data into a file. Also, compression methods like gzip are ofthen used.
 
-Also, If you use mydumper, you can use the following commands.
+% Also, If you use mydumper, you can use the following commands.
 
-\begin{itemize}
-\item[--] mkdir -p /backups/mydumper/today
-\item[--] mydumper --outputdir=/backups/mydumper/today --host=localhost --compress --kill-long-queries --verbose=3 --build-empty-files --triggers --events -routines 
-\end{itemize}
+% \begin{itemize}
+% \item[--] mkdir -p /backups/mydumper/today
+% \item[--] mydumper --outputdir=/backups/mydumper/today --host=localhost --compress --kill-long-queries --verbose=3 --build-empty-files --triggers --events -routines 
+% \end{itemize}
 
  
-To recover the data, we can just uncompress the data and executre the sql query in the .sql file. 
+% To recover the data, we can just uncompress the data and executre the sql query in the .sql file. 
 
-you can also use binlog for backup and recovery.
+% you can also use binlog for backup and recovery.
 
-\begin{itemize}
-\item[--] mkdir -p /backups/binlogs
-\item[--] cd /backups/binlogs
-\item[--] mysqlbinlog --raw --read-from-remote-server --stop-never --verify-binlog-checksum --host=192.168.56.201 --stop-never-slave-server-id=999 mysql-bin.000001
-\end{itemize}
+% \begin{itemize}
+% \item[--] mkdir -p /backups/binlogs
+% \item[--] cd /backups/binlogs
+% \item[--] mysqlbinlog --raw --read-from-remote-server --stop-never --verify-binlog-checksum --host=192.168.56.201 --stop-never-slave-server-id=999 mysql-bin.000001
+% \end{itemize}
 
 
-\subsection{physical backup}
+% \subsection{physical backup}
 
-Physical bakcup consists of raw copies of directories and files that store the database contents\citep{mysqlbackupdocumentation}. In fact, simple commands like cp can be used as physical backup method. Popular physical backup tools includes ibbackup and XtraBackup\citep{xtrabackup}. MySQL store data in a set of files in a directory. Typical files includes .
+\textbf{Physical backup} consists of raw copies of directories and files that store the database contents\citep{mysqlbackupdocumentation}. In fact, simple commands like cp can be used as physical backup method. Popular physical backup tools includes ibbackup and XtraBackup\citep{xtrabackup}. MySQL store data in a set of files in a directory. Typical files includes .
 This type of backup is fast since they do not convert data into logical form. Since the metadata show the data in logical form, we choose to design our strategy based on logical backup. 
 
 
@@ -53,14 +51,14 @@ Here we describe a typical physical backup workflow.
 The recovery form physical backup is easy. Just to uncompress the backup files and then move it the the mysql directory. 
 
 
-\begin{itemize}
-\item[--] service mysql stop
-\item[--] rm -rf /data/mysql
-\item[--] cd /backups/mylvmbackup
-\item[--] tar zxf <backup file>
-\item[--] mv backup/mysql /data/mysql
-\item[--] service mysql start
-\end{itemize}
+% \begin{itemize}
+% \item[--] service mysql stop
+% \item[--] rm -rf /data/mysql
+% \item[--] cd /backups/mylvmbackup
+% \item[--] tar zxf <backup file>
+% \item[--] mv backup/mysql /data/mysql
+% \item[--] service mysql start
+% \end{itemize}
 
 
 We can find that logical backup allow user to find duplicate in the database directly, so in our design, we give our design based on logical backup.

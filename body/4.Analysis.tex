@@ -47,8 +47,8 @@ Then let's talk about OPE-STR. OPE-STR can also have three layers, OPE-STR-JOIN,
 The above discussion reveals two facts:
 
 \begin{itemize}
-\item[--] The size of Onion OPE can not exceed 32 Bytes regardless of the size of plaintext
-\item[--] Onion OPE can lose information of the plaintext, so we can not use the Onion OPE
+\item The size of Onion OPE can not exceed 32 Bytes regardless of the size of plaintext
+\item Onion OPE can lose information of the plaintext, so we can not use the Onion OPE
 \end{itemize}
 
 
@@ -68,20 +68,20 @@ As we have known the property of the encryption schemes and the data layout. We 
 Since the detailed performance is related to so many things, we do not provide exact strategy for backup. Instead, we summarize several Principals for cryptdb backup and then give some examples. 
 
 \begin{itemize}
-\item[--] One original field is replicated several times and encrypted with different schemes
-\item[--] If we want mininum storage overhead, then for each field we can find the onion with the least size, like AES or blowfish, that can produce ciphertext of the size similar to plaintext, and remove all other onions. If we want minimum time overhead, we should backup all the onions, so that we can recover the data directly. Other choices are something in between.
-\item[--] Metadata should have a full backup for data recovery, and the size of metadata is small. 
-\item[--] For recovery, we need to decrypt the onion we have, and based on the metadata, recompute the ciphertext for other onions.
-\item[--] For one onion, we can choose the stay in RND layers, which means identical plaintext can have different ciphertext. If we decypt it to a layer that is not random, then identical plaintext can have the same ciphertext. If most of the plain text in this column are the same, then it will be easy to compress this filed to reduce storage overhead. Also, if we decrypt RND layer, then we can remove the IV column, which further reduces storage overhead.
+\item One original field is replicated several times and encrypted with different schemes
+\item If we want mininum storage overhead, then for each field we can find the onion with the least size, like AES or blowfish, that can produce ciphertext of the size similar to plaintext, and remove all other onions. If we want minimum time overhead, we should backup all the onions, so that we can recover the data directly. Other choices are something in between.
+\item Metadata should have a full backup for data recovery, and the size of metadata is small. 
+\item For recovery, we need to decrypt the onion we have, and based on the metadata, recompute the ciphertext for other onions.
+\item For one onion, we can choose the stay in RND layers, which means identical plaintext can have different ciphertext. If we decypt it to a layer that is not random, then identical plaintext can have the same ciphertext. If most of the plain text in this column are the same, then it will be easy to compress this filed to reduce storage overhead. Also, if we decrypt RND layer, then we can remove the IV column, which further reduces storage overhead.
 \end{itemize}
 
 
 Based on the principals, we proposes the following strategies for String data and Integer data. 
 
 \begin{itemize}
-\item[--] Remove RND and use DET onion will produce the least storage overhead.
-\item[--] Do not remove anything. This is the strategy with the most storage over head and least computation overhead
-\item[--] Retain RND and salt for DET, remove HOM and OPE, and Search. This method has high security level.
+\item Remove RND and use DET onion will produce the least storage overhead.
+\item Do not remove anything. This is the strategy with the most storage over head and least computation overhead
+\item Retain RND and salt for DET, remove HOM and OPE, and Search. This method has high security level.
 \end{itemize}
 
 

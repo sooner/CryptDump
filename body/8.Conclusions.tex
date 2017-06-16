@@ -1,16 +1,18 @@
-\section{future work}
+% \section{future work}
 
-\begin{itemize}
-\item[--] More efficient homomorphic encryption algorithms other than pailliar
-\item[--] Deduplication for master-slave replication
-\item[--] Deduplication for distributed database
-\end{itemize}
+% \begin{itemize}
+% \item[--] More efficient homomorphic encryption algorithms other than pailliar
+% \item[--] Deduplication for master-slave replication
+% \item[--] Deduplication for distributed database
+% \end{itemize}
 
 
 
 \section{Conclusions}
 
 Fully Homomorphic encryption is still not applicable, so researchers proposed encryption schemes that can support only a small set of operations on encrypted data. For example, we have algorithms that can support order comparison, searching, addition, multiplying, and equal comparison. Replication of data is used to support many operations at the same time. This technique make homomorphic operation possible in database system. In this paper, discuss the possible deduplication space for such systems and propose several strategies for deduplication for database backup. Our strategy find duplicates in the database column level, of which state of the art compression or deduplication method are unaware. We dive into the implementation details of cryptdb and the characteristics of each algorithm, and search for possible tradeoff in a backup system. We can parse the metadata of cryptdb can use this information to find duplicates for deduplication. This technique, with the help of metadata, can find duplicates before feeding the resulting files into other compression or deduplication systems, and therefore can be considered as a preprocessing step before backup. Experiments show that this technique can siginifcantly reduce the storage overhead. We also discuss the tradeoff between storage overhead and time for recovery for each algorithm. For the pailliar algorithm, remove the onion will save a lot space, while introducing the overhead of recomputing the ciphertext. This choice depends on the needs of the customer, they can choose what they want and configure the strategy. Also, for each onion, they can choose to decrypt most secure level of the onion, which can produce higher compression ratio and enable user to remove the IV column. 
+
+We use metadata to find semantaically identical data and use simple technique to deduplicate data.
 
 \begin{acks}
   The authors would like to everyone for their help, without which this work would not have been possible. 

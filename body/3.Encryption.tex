@@ -1,49 +1,11 @@
-\section{Encryption schemes}
+\subsection{Database Backup}
 
-
-\subsection{data layers for string}
-
-For string type, the newest version of cryptdb only support two onions: DET and OPE. Search was removed. Also, since the onion search has only one layer and it's quite easy to do analysis, we focus on the other two layers
-in this section. For onion DET, the DET layers uses 128 bits AEC-CMC encryption, which is a simple wrapper function of AES-CBC. AES-CBC will pad the plain text if the size of plain text can not be divided by the block size. For simplicity, in the current implementation, if the input can be divided by the block size, the size of the data type is expanded by one block size. Thus, as we add more layers to the onion, the size of the data type keeps increasing. 
-
-For OPE-str, the data type will be transformed to 64 bits integer. Therefore, the characteristic of OPE-str is constrained to 64bits. The for the RND layer, blowfish will be used since the data type is transformed to integer. OPE is used only for comparing and since it loses information, we can not decrypt ope-str. So this onion is not suitable for backup. 
-
-Figure 3.2 provides illustration of the onions. 
-
-
-
-\subsection{data layers for integer}
-
-For integer type, cryptdb create three onion: DET, OPE, and HOM. Figure 3.1 shows the layout of the onions. Hom expand any type of integer to 2048 bits binarychar. For DET and OPE, the type conversion is more complex. DET layer uses blowfish encryption, which requires 64bits integer. RND for integer also uses blowfish encryption. So for DET onion, any integer will be at most expanded to 64 bits long. For onion OPE, the first layer requires that the size of cipher text is twice the size of plaintext. If the size of ciphertext is larger than 64bits thus unable to fit into an integer type, varbinary is used instead. 
-
-
-
-\subsection{data layout and structure}
-
-In this section, we talk about the onion layout and How an original table is expanded with a specific onion layout. Since the only two data type supported for encryption, we will use and imginery table with those two data types. 
-
-
-
-\begin{figure}[tb]
-\centering
-\includegraphics[width=8cm]{images/Onions.pdf}
-\caption{Onion encryption layers for integer type}
-\label{fig:stack3}
-\end{figure}
-
-
-\section{database backup methods and deduplication}
-
-Data backup is an important functionality of database systems. All the popular database systems have backup methods. Based on how the backup is stored, we can can have two categorities of backup methods: logical backup and physical backup. Backup tools focus on low storage overhead and fast recovery. Since we do experiment with MySQL, this section focus on backup methods for MySQL. Other systems will be similar. We use backup to deal with disasters. In this section, we introduce popular backup methods. Typical backup methods also provide functions like encryption for security and compression for saving disk space.GPG tools is used for encryption.
-
+Data backup is an important functionality for database systems. All the popular database systems have their own backup methods. Based on how the backup is stored, we can can have two categories of backup methods: logical backup and physical backup. Backup tools focus on low storage overhead and fast recovery. Since we do experiment with MySQL, this section focus on backup methods for MySQL. Other systems will be similar. We use backup to deal with disasters. In this section, we introduce popular backup methods. Typical backup methods also provide functions like encryption for security and compression for saving disk space.GPG tools is used for encryption.
 
 
 \subsection{logical backup}
 
 Logical backup save information in the form of SQL queries \citep{mysqlbackupdocumentatio}. For Logical backup, it's easy to control the backup granularity, and it's highly portable since the backup is in text format. MySQLdump and MySQLdumper\citep{mysqldumpper} are examples of Logical backup tools. We can also use SELECT .. INTO OUTFILE to create delimited-text files for logical backup. The basic process of logical backup is first to use select queries to pull data from the MySQL-server, and then use the data to construct Insert queries and save them into a text file. Also, Create table queries will be saved into files for recovery. We can also categorize backup method by other creterions, since we can about storage size and the logical deduplcation, we only discuss two types of backup here.
-
-
-
 
 
 Here we describe a typical logical backup command.
@@ -53,10 +15,6 @@ Here we describe a typical logical backup command.
 \item[--] mkdir /backups/mysqldump
 \item[--] mysqldump --single-transaction --all-databases |gzip > /backups/mysqldump/today.sql.gz 
 \end{itemize}
-
-
-
-
 
 
                                                  
@@ -106,4 +64,6 @@ The recovery form physical backup is easy. Just to uncompress the backup files a
 
 
 We can find that logical backup allow user to find duplicate in the database directly, so in our design, we give our design based on logical backup.
+
+
 

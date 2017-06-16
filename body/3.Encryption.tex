@@ -7,7 +7,7 @@ Data backup is an important functionality for database systems. All the popular 
 
 \subsubsection{logical backup}
 
-Logical backup save information in the form of SQL queries \citep{mysqlbackupdocumentation}.  For Logical backup, it's easy to control the backup granularity, and it's highly portable since the backup is in text files containing data or SQL queries. mysqldump \citep{mysqldump-doc} and MySQLdumper\citep{mysqldumpper} are examples of Logical backup tools. We can also use SELECT .. INTO OUTFILE to create delimited-text files for logical backup. The basic process of logical backup is first to use select SQL queries to pull data from the MySQL-Server, and then save those data into text files.
+Logical backup save information in the form of SQL queries \citep{mysqlbackupdocumentation}.  For Logical backup, it's easy to control the backup granularity, and it's highly portable since the backup is in text files containing data or SQL queries. mysqldump \citep{mysqldump-doc} and MySQLdumper\citep{mysqldumpper} are examples of Logical backup tools. We can also use SELECT .. INTO OUTFILE \citep{select-into-mysql-doc} to create delimited-text files for logical backup. The basic process of logical backup is first to use select SQL queries to pull data from the MySQL-Server, and then save those data into text files.
 
 % Also, Create table queries will be saved into files for recovery. We can also categorize backup method by other creterions, since we can about storage size and the logical deduplcation, we only discuss two types of backup here.
 

@@ -29,9 +29,9 @@ As we can see, we can create a directory and use simple mysqldump command and op
 
 \textbf{Physical backup} consists of raw copies of directories and files that store the database contents\citep{mysqlbackupdocumentation}. In fact, simple commands like cp can be used as physical backup method. Popular physical backup tools includes ibbackup and XtraBackup\citep{xtrabackup}. MySQL stores data and metadata in a set of files in a user configured directory. Typical files includes:  .This type of backup is fast since they do not convert data into logical form. Since the metadata show the data in logical form, we choose to design our strategy based on logical backup. 
 
-Here we describe a typical physical backup workflow. 
+% Here we describe a typical physical backup workflow. 
 
-(to be added)
+% (to be added)
 
 The recovery form physical backup is easy. Just to decompress the backup files and then move it the original mysql directory. 
 
@@ -42,6 +42,4 @@ The recovery form physical backup is easy. Just to decompress the backup files a
 % \item[--] mv backup/mysql /data/mysql
 % \end{itemize}
 
-
-As we described in section, We can find that logical backup allow user to find duplicate in the database directly, so in our design, we give our design based on logical backup.
-
+As we described in this section, the encryption metadata at the proxy stores the mapping of the original fileds to the encrypted onion fields. For logical backup, this information can be used directly, so we will give our design based on logical backup.

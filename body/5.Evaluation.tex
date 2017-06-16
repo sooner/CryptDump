@@ -12,7 +12,7 @@ First, we evaluate the time overhead.  Recall that we may want to remove salt, s
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/aes.eps}
+\includegraphics[width=8cm]{images/aes.eps}
 \caption{Aes time consumpation}
 \label{fig:stack9}
 \end{figure}
@@ -22,7 +22,7 @@ First, we evaluate the time overhead.  Recall that we may want to remove salt, s
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/time.png}
+\includegraphics[width=8cm]{images/time.eps}
 \caption{time consumpation}
 \label{fig:stack10}
 \end{figure}
@@ -37,7 +37,7 @@ For integer data, as we mentioned before, the columns are replicated three time 
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/size-of-each-onion.eps}
+\includegraphics[width=8cm]{images/size-of-each-onion.eps}
 \caption{Size of onion for integer type}
 \label{fig:stack11}
 \end{figure}
@@ -48,11 +48,19 @@ For string type, we do experiment with a simple table of varchar(10). After encr
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=4cm]{images/det-rnd.eps}
+\includegraphics[width=8cm]{images/det-rnd.eps}
 \caption{size of onion for string type}
 \label{fig:stack12}
 \end{figure}
 
+
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=8cm]{images/aftercompression.eps}
+\caption{size of onion for string type}
+\label{fig:stack12}
+\end{figure}
 
 
 We also give the expected recovery time for each onion based on the assumpation that we only backup the Onion DET. Figure~\ref{fig:stack12} depicts the results.

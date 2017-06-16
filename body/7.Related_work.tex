@@ -3,7 +3,7 @@
 We propose high level deduplication technique the used the metadata in the proxy to find fields in a relational table that are duplicated and encrypted using different encryption schemes. We find proper fields to remove and save the deduplicated field into files. Our technique can be considered as a kind of preprocessing and can be combinded with other deduplication methods.
 
 
-\textbf{database backup dedpulication compression} 
+\textbf{database backup dedpulication compression}
 
 Deduplication on storage system is a hot research topic\citep{paulo2014survey}.\citep{xu2017online} proposes an online deduplication for operational database system. According to \citep{xu2017online}, dedup using hash method works well for both primary and backup storage data sets that comprises of large files that are rarely modified. In our work, we focus on archivial data, so the files are rarely modified. And those traditional method can work together with our proposed method. There are many work on deduplication for secondary storage, the can either use exact dedup\citep{dubnicki2009hydrastor} or similarity based dedup\citep{xu2015reducing} \citep{aronovich2009design}\citep{you2005deep}.
 

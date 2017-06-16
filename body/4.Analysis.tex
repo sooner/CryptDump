@@ -5,20 +5,72 @@ In this section, we will analyze the details of each onion design. As we stated 
 
 In CryptDB, each column in a table can be encrypted into several onions. Each onion can have several layers. We have to make a choice whether to remove or retain a onion. If one column has three onions, we will have eight choices. Since we can not remove all of the onions, there are seven possible choices. For each onion, we can either choose to backup it directly, or to decrypt some layers and then backup it. We will discuss whether those choices are practical.
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=\columnwidth]{images/onions-for-string.eps}
-\caption{onions-for-string}
-\label{fig:stack4}
+
+% \begin{figure}%[tb]
+% % \centering
+% %\begin{tabular}{cc}
+% \begin{minipage}[t]{0.48\linewidth}
+% \centering
+%   \includegraphics[width=4.0cm]{images/onions-for-string.eps}
+%   % \centerline{(a) Result 1}
+% \end{minipage}
+% % \hfill
+
+% \begin{minipage}[t]{0.48\linewidth}
+% \centering
+%   \includegraphics[width=4.0cm]{images/onion-for-integer.eps}
+%   % \centerline{(b) Result 2}
+% \end{minipage}
+% % \vfill
+
+% %\end{tabular}
+% \caption{Example of placing a figure with experimental results.}
+% \label{fig:res}
+
+% % \includegraphics[width=\columnwidth]{images/onions-for-string.eps}
+% % \caption{onions-for-string}
+% % \label{fig:stack4}
+% \end{figure}
+
+
+\begin{figure}   
+  \begin{minipage}[t]{0.5\linewidth}  
+    \centering   
+    \includegraphics[width=4.0cm]{images/onions-for-string.eps}   
+    \caption{Small Box}   
+    \label{fig:side:a}   
+  \end{minipage}%   
+  \begin{minipage}[t]{0.5\linewidth}   
+    \centering   
+    \includegraphics[width=4.0cm]{images/onion-for-integer.eps}   
+    \caption{Big Box}   
+    \label{fig:side:b}   
+  \end{minipage}   
 \end{figure}
 
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=\columnwidth]{images/det_str.eps}
-\caption{det-str-eps}
-\label{fig:stack5}
-\end{figure}
+
+
+
+
+
+
+% \begin{figure}[tb]
+% \centering
+% \includegraphics[width=8cm]{images/onion-for-integer.eps}
+% \caption{onions-for-integer}
+% \label{fig:stack6}
+% \end{figure}
+
+
+
+
+% \begin{figure}[tb]
+% \centering
+% \includegraphics[width=\columnwidth]{images/det_str.eps}
+% \caption{det-str-eps}
+% \label{fig:stack5}
+% \end{figure}
 
 
 
@@ -27,12 +79,6 @@ Figure~\ref{fig:stack4},~\ref{fig:stack5} shows how the size of a string change 
 
 
 
-\begin{figure}[tb]
-\centering
-\includegraphics[width=8cm]{images/onion-for-integer.eps}
-\caption{onions-for-integer}
-\label{fig:stack6}
-\end{figure}
 
 
 Figure~\ref{fig:stack6} shows how the storage size change for each onion for integer type. Currently, there are three onions for integer, HOM uses Pailliar algorithm, DET for integer uses 64bits blowfish, so the size of the ciphertext is always 64bits integer. There is no padding. HOM uses pailliar, so the result is always 256bytes integer. MySQL do not has such long integer, so varbinary(256) is used instead. Now let's discussion how the size change across layers of the onion OPE for both String type and Integer type. 

@@ -39,7 +39,7 @@ def autolabel(rects):
 autolabel(rects1)
 autolabel(rects2)
 
-plt.ylim(0,60)
+plt.ylim(0,10000)
 #plt.xlim(-0.1, 3.5)
 
 

@@ -10,20 +10,38 @@ There are two things to evaluate, the first is the storage overhead, and the sec
 First, we analyze the overhead of time.  Recall that we may want to remove salt, so we first need to know how fast can we regenerate a new salt. We do experiment with the function in CryptDB and find that the computation overhead for one salt value is around 0.7 $\mu$s. So this computation is quite fast and the overhead could be ignored. We also need to know how much time is consumed to do computation in each layer, so we do experiment for those algorithms.
 
 
-\begin{figure}   
-  \begin{minipage}[t]{0.5\linewidth}  
-    \centering   
-    \includegraphics[width=4.7cm]{images/aes.eps}   
-    \caption{\small{This figure show how the encryption and decryption time change with the input length.}}   
+\begin{figure*}   
+  \begin{minipage}[t]{0.5\columnwidth}  
+    \centering
+    \includegraphics[width=4.7cm]{images/aes.eps}  
+     
+    \caption{\small{This figure show how the encryption and decryption time change with the input length.}}  
     \label{fig:stack9}   
-  \end{minipage}%   
-  \begin{minipage}[t]{0.5\linewidth}
+  \end{minipage}% 
+  \hfill  
+  \begin{minipage}[t]{0.5\columnwidth}
     \centering   
     \includegraphics[width=4.7cm]{images/time.eps}   
     \caption{\small{This figures show the encryption and decryption time of the algorithm blowfish, Pailliar, and order preserving encryption}}  
     \label{fig:stack10}   
-  \end{minipage}   
-\end{figure}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.5\columnwidth}  
+    \centering   
+
+    \includegraphics[width=4.7cm]{images/size-of-each-onion.eps}   
+    \caption{\small{This figure shows the size of each encrypted column in the form of text file for the table we creates that has one plaintext column of Integer type}} 
+    \label{fig:stack11}   
+  \end{minipage}%
+  \hfill 
+  \begin{minipage}[t]{0.5\columnwidth}   
+    \centering   
+    \includegraphics[width=4.7cm]{images/det-rnd.eps}   
+    \caption{\small{This figure shows the size of each encrypted column in the form of text file for the table we creates that have one plaintext column of String type}} 
+    \label{fig:stack12}   
+
+  \end{minipage} 
+\end{figure*}
 
 % \begin{figure}[tb]
 % \centering
@@ -60,14 +78,15 @@ For integer data, as we mentioned before, the columns are replicated three time 
 
 
 \begin{figure}   
-  \begin{minipage}[t]{0.5\linewidth}  
+  \begin{minipage}[t]{0.47\columnwidth}  
     \centering   
 
     \includegraphics[width=4.7cm]{images/size-of-each-onion.eps}   
     \caption{\small{This figure shows the size of each encrypted column in the form of text file for the table we creates that has one plaintext column of Integer type}} 
     \label{fig:stack11}   
-  \end{minipage}%   
-  \begin{minipage}[t]{0.5\linewidth}   
+  \end{minipage}%  
+  \hfill 
+  \begin{minipage}[t]{0.47\columnwidth}   
     \centering   
     \includegraphics[width=4.7cm]{images/det-rnd.eps}   
     \caption{\small{This figure shows the size of each encrypted column in the form of text file for the table we creates that have one plaintext column of String type}} 
@@ -92,20 +111,7 @@ For string type, we do experiment with a simple table of varchar(10). After encr
 
 
 
-\begin{figure}   
-  \begin{minipage}[t]{0.5\linewidth}  
-    \centering   
-    \includegraphics[width=4.7cm]{images/aftercompression.eps}   
-    \caption{\small{This figure shows how the size of each encrypted column change after being compressed using gzip}} 
-    \label{fig:stack12}   
-  \end{minipage}%   
-  % \begin{minipage}[t]{0.5\linewidth}   
-  %   \centering   
-  %   \includegraphics[width=4.0cm]{images/tpcc.png}   
-  %   \caption{tpcc}   
-  %   \label{fig:side:b}   
-  % \end{minipage}   
-\end{figure}
+
 
 
 
@@ -137,7 +143,20 @@ Finally we do experiment with the TPCC-MySQL, the original data is the 74MB, and
 
 Based on the above results, we can find that, in the current implementation of CryptDB, Onion OPE is always small and can not be used for recovering, So OPE can be removed  to save space. For integers, the onion HOM is large, and also taken a long time to recover, So If we remove HOM for deduplication, and use the onion DET for recovering the data, we can save a lot space while paying the overhead of recomputing the onion HOM. If we can find ways to accelerate the computation of pailliar, then this deduplication can be more efficient. The onion DET-INT uses blowfish, which is fast and occupy little space compared to the plaintext, so it's reasonable to retain this onion. Decrypting the layer RND-int should reduce the size by half since we no longer need the IV column, so we can remove this column. Also, decrypting the RND-int layers can produce higher compression ratio. Things are similar for string type. String type has a search onion, which is expected to be similar to onion DET. So if we remove search, we expect to reduce the size by half. If we then remove the RND-STR layer, we also get higher compression ratio. In \citep{popa2015guidelines}, new onions are added in CryptDB, this can leave more space for deduplication.
 
-
+\begin{figure}   
+  \begin{minipage}[t]{0.5\linewidth}  
+    \centering   
+    \includegraphics[width=4.7cm]{images/aftercompression.eps}   
+    \caption{\small{This figure shows how the size of each encrypted column change after being compressed using gzip}} 
+    \label{fig:stack12}   
+  \end{minipage}%   
+  % \begin{minipage}[t]{0.5\linewidth}   
+  %   \centering   
+  %   \includegraphics[width=4.0cm]{images/tpcc.png}   
+  %   \caption{tpcc}   
+  %   \label{fig:side:b}   
+  % \end{minipage}   
+\end{figure}
 % \begin{talbe*}
 % \begin{tabu*} to \hsize {|X|X|X|X|X|X|X|X|X|X|}
 % \hline

@@ -5,7 +5,7 @@ font = {
 #'family' : 'serif',  
 #        'color'  : 'darkred',  
 #        'weight' : 'normal',  
-        'size'   : 16,  
+        'size'   : 18,  
         }
 
 
@@ -16,22 +16,22 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.35       # the width of the bars
 
 fig, ax = plt.subplots()
-rects1 = ax.bar(ind, men_means, width, color='r')
+rects1 = ax.bar(ind, men_means, width, color='black')
 
-women_means = (20, 34, 34, 13)
+#women_means = (20, 34, 34, 13)
 
-rects2 = ax.bar(ind + width, women_means, width, color='y')
+#rects2 = ax.bar(ind + width, women_means, width, color='y')
 
 
 # add some text for labels, title and axes ticks
-ax.set_xlabel( 'Onions',fontdict=font )
-ax.set_ylabel( 'Size',fontdict=font )
+ax.set_xlabel( 'String-Onions',fontdict=font )
+ax.set_ylabel( 'Size in MB',fontdict=font )
 
 ax.set_title('Size of DET',fontdict=font)
 ax.set_xticks(ind + width / 2)
-ax.set_xticklabels(('IV', 'DET', 'OPE', 'PLAIN'))
+ax.set_xticklabels(('IV', 'DET', 'OPE', 'PLAIN'),fontdict=font)
 
-ax.legend((rects1[0], rects2[0]), ('RND-Layer', 'DET-Layer'))
+#ax.legend((rects1[0], rects2[0]), ('RND-Layer', 'DET-Layer'))
 
 
 def autolabel(rects):
@@ -45,10 +45,11 @@ def autolabel(rects):
                 ha='center', va='bottom',fontdict=font)
 
 autolabel(rects1)
-autolabel(rects2)
+#autolabel(rects2)
 
 #plt.show()
 #
 
+plt.ylim(0,60)
 
 fig.savefig('det-rnd.eps' )

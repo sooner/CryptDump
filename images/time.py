@@ -5,7 +5,7 @@ font = {
 #'family' : 'serif',  
 #        'color'  : 'darkred',  
 #        'weight' : 'normal',  
-        'size'   : 16,  
+        'size'   : 18,  
         }
 
 N = 3
@@ -15,19 +15,19 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.35       # the width of the bars
 
 fig, ax = plt.subplots()
-rects1 = ax.bar(ind, men_means, width, color='r')
+rects1 = ax.bar(ind, men_means, width, color='black')
 
 women_means = (0.11, 382.44, 140.07)
 
-rects2 = ax.bar(ind + width, women_means, width, color='y')
+rects2 = ax.bar(ind + width, women_means, width, color='green')
 
 
 # add some text for labels, title and axes ticks
-ax.set_xlabel('Layer',fontdict=font)
-ax.set_ylabel('Size in MB',fontdict=font)
+ax.set_xlabel('Encryption algorithms',fontdict=font)
+ax.set_ylabel('Time in us',fontdict=font)
 
-ax.set_title('After compression',fontdict=font)
-ax.set_xticks(ind + width / 2)
+ax.set_title('Encryption/Decryption time',fontdict=font)
+ax.set_xticks(ind + width)
 ax.set_xticklabels(('Blowfish', 'HOM', 'OPE'),fontdict=font)
 
 ax.legend((rects1[0], rects2[0]), ('Encryption', 'Decryption'))

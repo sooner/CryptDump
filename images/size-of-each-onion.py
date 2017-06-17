@@ -5,7 +5,7 @@ font = {
 #'family' : 'serif',  
 #        'color'  : 'darkred',  
 #        'weight' : 'normal',  
-        'size'   : 16,  
+        'size'   : 18,  
         }
 
 N = 5
@@ -18,11 +18,11 @@ fig, ax = plt.subplots()
 
 ### How we find document Axes.bar(left, height, width=0.8, bottom=None, **kwargs)
 ###  bars : matplotlib.container.BarContainer
-rects1 = ax.bar(ind, men_means, width, color='b')
+rects1 = ax.bar(ind, men_means, width, color='black')
 
 # add some text for labels, title and axes ticks
-ax.set_ylabel('Length',fontdict=font)
-ax.set_xlabel('Layers',fontdict=font)
+ax.set_ylabel('Size in MB',fontdict=font)
+ax.set_xlabel('Int-Onions',fontdict=font)
 
 ax.set_title('Length of each layers',fontdict=font)
 

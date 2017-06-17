@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 cmap = plt.get_cmap('Reds')
+
 colors = [cmap(i) for i in np.linspace(0, 1, 3)]
 
 x = range(4)

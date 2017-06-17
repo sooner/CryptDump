@@ -2,17 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 font = {
-#'family' : 'serif',  
-#        'color'  : 'darkred',  
-#        'weight' : 'normal',  
-        'size'   : 18,  
+#'family' : 'serif',
+#        'color'  : 'darkred',
+#        'weight' : 'normal',
+        'size'   : 20,  
         }
+
 
 N = 3
 men_means = (0.12, 4454.21, 143.76)
 
-ind = np.arange(N)  # the x locations for the groups
-width = 0.35       # the width of the bars
+width = 0.4       # the width of the bars
+ind = np.arange(N) + width # the x locations for the groups
+
 
 fig, ax = plt.subplots()
 rects1 = ax.bar(ind, men_means, width, color='black')
@@ -40,7 +42,7 @@ def autolabel(rects):
     for rect in rects:
         height = rect.get_height()
         ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
-                '%.3f' % height,
+                '%.2f' % height,
                 ha='center', va='bottom')
 
 autolabel(rects1)

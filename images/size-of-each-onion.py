@@ -5,14 +5,16 @@ font = {
 #'family' : 'serif',  
 #        'color'  : 'darkred',  
 #        'weight' : 'normal',  
-        'size'   : 18,  
+        'size'   : 20,  
         }
 
 N = 5
 men_means = (20, 251, 20,34,7.7)
 
-ind = np.arange(N)  # the x locations for the groups
-width = 0.35       # the width of the bars
+
+width = 0.4       # the width of the bars
+ind = np.arange(N) + width# the x locations for the groups
+
 
 fig, ax = plt.subplots()
 

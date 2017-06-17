@@ -18,7 +18,7 @@ The decryption keys will be kept in proxy servers where we trust so the DBMS ser
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=6cm]{images/Cryptdb-structure2.pdf}
+\includegraphics[width=6cm]{images/Cryptdb-structure.pdf}
 \caption{(a) shows the normal interaction between the web server and the DBMS, (b) shows the four steps of query execution in a cryptdb system}
 \label{fig:stack1}
 \end{figure}
@@ -43,7 +43,7 @@ RND provides the maximum security which maps two equal values to different ciphe
 
 \begin{figure}[tb]
 \centering
-\includegraphics[width=6cm]{images/extend.pdf}
+\includegraphics[width=6cm]{images/Extended.pdf}
 \caption{(a) is an plain text table with two columns, and (b) is the coresponding encrypted table. Each column is replicated three times, and encrypted using three different onions, Onion means layers of encryption. An additional IV column is stored, which is used together with the decryption key to decrypt the RND layers of the onions}
 \label{fig:stackx}
 \end{figure}

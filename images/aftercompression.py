@@ -39,14 +39,15 @@ def autolabel(rects):
     """
     for rect in rects:
         height = rect.get_height()
+
         ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
-                '%.3f' % height,
-                ha='center', va='bottom', fontdict=font )
+                '%.2f' % height,
+                ha='center', va='bottom')
 
 autolabel(rects1)
 autolabel(rects2)
 
-plt.ylim(0,60)
+plt.ylim(0,80)
 #plt.xlim(-0.1, 3.5)
 
 

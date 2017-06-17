@@ -23,8 +23,8 @@ rects2 = ax.bar(ind + width, women_means, width, color='y')
 
 
 # add some text for labels, title and axes ticks
-ax.set_xlabel('Layer',fontdict=font)
-ax.set_ylabel('Size in MB',fontdict=font)
+ax.set_xlabel('Encryption algorithm',fontdict=font)
+ax.set_ylabel('Time in us',fontdict=font)
 
 ax.set_title('After compression',fontdict=font)
 ax.set_xticks(ind + width / 2)

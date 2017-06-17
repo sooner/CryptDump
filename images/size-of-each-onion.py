@@ -21,8 +21,8 @@ fig, ax = plt.subplots()
 rects1 = ax.bar(ind, men_means, width, color='b')
 
 # add some text for labels, title and axes ticks
-ax.set_ylabel('Length',fontdict=font)
-ax.set_xlabel('Layers',fontdict=font)
+ax.set_ylabel('Size in MB',fontdict=font)
+ax.set_xlabel('Int-Onions',fontdict=font)
 
 ax.set_title('Length of each layers',fontdict=font)
 

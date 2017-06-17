@@ -61,22 +61,56 @@ OPE requires that the cipher text size is double the size of plain text.
 % \end{figure}
 
 
-\begin{figure}   
-  \begin{minipage}[t]{0.5\linewidth}  
-    \centering   
-    \includegraphics[width=4.0cm]{images/onions-for-string.eps}   
-    \caption{onions-for-string}   
-    \label{fig:side:a}   
-  \end{minipage}%   
-  \begin{minipage}[t]{0.5\linewidth}   
-    \centering   
-    \includegraphics[width=4.0cm]{images/onion-for-integer.eps}   
-    \caption{onion-for-integer}   
-    \label{fig:side:b}   
-  \end{minipage}   
-\end{figure}
+% \begin{figure}   
+%   \begin{minipage}[t]{0.5\linewidth}  
+%     \centering   
+%     \includegraphics[width=4.0cm]{images/onions-for-string.eps}   
+%     \caption{onions-for-string}   
+%     \label{fig:side:a}   
+%   \end{minipage}%   
+%   \begin{minipage}[t]{0.5\linewidth}   
+%     \centering   
+%     \includegraphics[width=4.0cm]{images/onion-for-integer.eps}   
+%     \caption{onion-for-integer}   
+%     \label{fig:side:b}   
+%   \end{minipage}   
+% \end{figure}
 
 
+% \begin{table}
+% \renewcommand{\arraystretch}{1.3}
+% \caption{Simple table}
+% \label{tab:example}
+% \centering
+% \begin{tabular}{|c|c|c|c|}
+%   \hline
+%   % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+% &t & customer & district \\
+% DET & 1 & 1\\  
+%  &  & \\
+% HOM & 1 & 1\\
+% IV & 1 & 1  \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+\begin{table}
+\renewcommand{\arraystretch}{1.3}
+\caption{Simple table}
+\label{tab:exampless}
+\begin{tabular}{p{0.8cm}|p{0.8cm}p{0.8cm}|p{0.8cm}p{0.8cm}|p{0.8cm}p{0.8cm}}%
+\toprule
+\multirow{2}{2cm}{Layers} & \multicolumn{2}{c}{\textbf{Onion-DET}} & \multicolumn{2}{c}{\textbf{Onion-OPE}} & \multicolumn{2}{c}{\textbf{Onion-HOM}}\\
+\cmidrule{2-7}
+& Integer & String & Integer & String & Integer & String\\
+\midrule
+Plain & 4B & 10B & 4B & 10B & 4B & null \\
+Layer1 & 8B & 16B & 8B & 8B & 256B & null \\
+Layer2 & 8B & 32B & 16B & 16B & null & null \\
+Layer3 & 8B & 48B & 32B & 32B & null & null \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 
 

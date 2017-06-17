@@ -3,21 +3,35 @@
 We propose high level deduplication technique the used the metadata in the proxy to find fields in a relational table that are duplicated and encrypted using different encryption schemes. We find proper fields to remove and save the deduplicated field into files. Our technique can be considered as a kind of preprocessing and can be combinded with other deduplication methods.
 
 
-\textbf{database backup dedpulication compression}
+\textbf{backup, dedpulication, and compression} Based on the format of backup, database backup can be categorized into two types:logical backup and physical backup\citep{mysqlbackup}. Our deduplication technique find sementically identically columns of a encrypted table, and backup one copy of the column into text file, which is a kind of logical backup. 
 
-Deduplication on storage system is a hot research topic\citep{paulo2014survey}.\citep{xu2017online} proposes an online deduplication for operational database system. According to \citep{xu2017online}, dedup using hash method works well for both primary and backup storage data sets that comprises of large files that are rarely modified. In our work, we focus on archivial data, so the files are rarely modified. And those traditional method can work together with our proposed method. There are many work on deduplication for secondary storage, the can either use exact dedup\citep{dubnicki2009hydrastor} or similarity based dedup\citep{xu2015reducing} \citep{aronovich2009design}\citep{you2005deep}.
 
-These traditional chunk based dedup system can not handled encryption well, So there are also work that address the tension between encryption and deduplication.
+% Deduplication on storage system is a hot research topic\citep{paulo2014survey}.
 
-\textbf{encryption and deduplication}
+\citep{xu2017online} proposes an online deduplication for operational database system. According to \citep{xu2017online}, dedup using hash method works well for both primary and backup storage data sets that comprises of large files that are rarely modified. In our work, we focus on archivial data, so the files are rarely modified. And those traditional method can work together with our proposed method. There are many work on deduplication for secondary storage, the can either use exact dedup\citep{dubnicki2009hydrastor} or similarity based dedup\citep{xu2015reducing} \citep{aronovich2009design}\citep{you2005deep}. Those deduplication can be categorized into three types: file level, block level, and byte level deduplication. Those dedup systems are unable to find duplicate data in cryptdb backup workload since data are encrypted using different encryption schemes.
 
-Encryption and deduplication are in tension, and there are research about this issue.\citep{bellare2013message} \citep{puzio2015perfectdedup} proposed message-locked enctyption, a kind of convergent encryption to addressed this problem. \citep{yan2016deduplication} addressed the problem of deduplication of encrypted files in a multi-user situation through authorized party and token comparison, they proposed their strategy through ownership chanllenge and proxy-re-encryption. In constrast, our work forcus on generating a backup file that occupy less storage space. In fact, deduplication methods on encrypted data fall into two catagories, convergent encryption and proof of ownership\citep{akhila2016study}. Convergent encryption works like DET, So detjoin level have the potential to allow deduplication.
+ % Actually, block level comparision do not work well for database workload, so there are also research targeting database workload. 
 
-How to combine those two methods together to make efficient deduplication is future work.
+% These traditional chunk based dedup system can not handled encryption well, So there are also work that address the tension between encryption and deduplication.
 
-Actually, block level comparision do not work well for database workload, so there are also research targeting database workload. 
+\citep{mandagere2008demystifying} says that compress tools like gzip reduce intra-file duplication while deduplication reduces both inter and intra file deduplication. For backup database workload that is encrypted, they can not find duplicates since data are encrypted. In our work, we can first use metadata to find duplicate data that is encrypted using different encryption schemes, and backup only one copy of the data. Then the backup can be fed into traditional deduplication or compression systems. We also find that removing the onion layer RND provides the potentail for greater compression ratio. 
 
-\citep{francinasurvey} proposed three encryption schemes for deduplication, those are file level deduplication.
-There are also work on solving the problem of compression and encryption\citep{zheng2017minicrypt}.
 
-\citep{mandagere2008demystifying} says that compress tools like gzip reduce intra-file duplication while deduplication reduces both inter and intra file deduplication. It also talked about client side deduplication using metadata.
+\textbf{encryption and deduplication} Data in Cryptedb is encrypted, and encryption and deduplication are in tension, and there are researches about this issue.\citep{bellare2013message} \citep{puzio2015perfectdedup} proposed message-locked enctyption, a kind of convergent encryption to addressed this problem. They require that data is encrypted using the proposed scheme, while in cryptdb, the encryption scheme is fixed, so those work do not target on cryptdb.
+
+\citep{yan2016deduplication} addressed the problem of deduplication of encrypted files in a multi-user situation through authorized party and token comparison, they proposed their strategy through ownership chanllenge and proxy-re-encryption. Those work do not target on database backup, and our work target on encrypted database that is replicated to support computing on encrypted data.
+
+
+% In constrast, our work forcus on generating a backup file that occupy less storage space. In fact, deduplication methods on encrypted data fall into two catagories, convergent encryption and proof of ownership\citep{akhila2016study}. Convergent encryption works like DET, So detjoin level have the potential to allow deduplication.
+
+% How to combine those two methods together to make efficient deduplication is future work.
+
+
+
+% \citep{francinasurvey} proposed three encryption schemes for deduplication, those are file level deduplication.
+% There are also work on solving the problem of compression and encryption\citep{zheng2017minicrypt}.
+
+
+% It also talked about client side deduplication using metadata.
+
+

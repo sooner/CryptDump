@@ -4,7 +4,7 @@ font = {
 #'family' : 'serif',  
 #        'color'  : 'darkred',  
 #        'weight' : 'normal',  
-        'size'   : 18,  
+        'size'   : 20,  
         }
 
 
@@ -66,14 +66,14 @@ y2=[5,8,0,30,20,40,50,10,40,15]
 ##plt.plot(xs,aes_cbc_encs,label='Frist line',linewidth=3,color='r',marker='o', markerfacecolor='blue',markersize=12) 
 
 
-plt.plot(xs,aes_cbc_encs,label='aes_cbc_enc',color='r')
+plt.plot(xs,aes_cbc_encs,label='aes_cbc_enc',color='black')
 
-plt.plot(xs,aes_cbc_decs,label='aes_cbc_dec',color='b')
+plt.plot(xs,aes_cbc_decs,label='aes_cbc_dec',color='blue')
 
 
-plt.plot(xs,aes_cmc_encs,label='aes_cmc_enc',color='g')
+plt.plot(xs,aes_cmc_encs,label='aes_cmc_enc',color='green')
 
-plt.plot(xs,aes_cmc_decs,label='aes_cmc_dec',color='y')
+plt.plot(xs,aes_cmc_decs,label='aes_cmc_dec',color='brown')
 
 
 

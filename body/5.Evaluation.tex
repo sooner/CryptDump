@@ -65,13 +65,13 @@ For integer data, as we mentioned before, the columns are replicated three time 
 
     \includegraphics[width=4.7cm]{images/size-of-each-onion.eps}   
     \caption{\small{This figure shows the size of each encrypted column in the form of text file for the table we creates that has one plaintext column of Integer type}} 
-    \label{fig:side:a}   
+    \label{fig:stack11}   
   \end{minipage}%   
   \begin{minipage}[t]{0.5\linewidth}   
     \centering   
     \includegraphics[width=4.7cm]{images/det-rnd.eps}   
     \caption{\small{This figure shows the size of each encrypted column in the form of text file for the table we creates that have one plaintext column of String type}} 
-    \label{fig:side:b}   
+    \label{fig:stack12}   
 
   \end{minipage}   
 \end{figure}
@@ -80,7 +80,7 @@ For integer data, as we mentioned before, the columns are replicated three time 
 
 
 
-For string type, we do experiment with a simple table of varchar(10). After encryption, the onion DET will be tranformed to varbinary(48) due to the padding, and OPE will be varbinary(32), salt should be big int. We insert 1,000,000 plaintext of length 10 into the table, and the Figure~\ref{fig:stack12} depicts the results for each column.We can find that even for very short string, three layer of encryption in onion DET can make it larger than the onion OPE. So ope is always assumed  smaller than DET. And the size of salt remains the same as in the experiment with integers. We can find that decrypting the RND layer can produce greater compression ratio. We use gizp with default options. This is an extream case since all the data in the columns are the same. For a big column with low Cardinality, like gender, this approach is expected to produce similar results. 
+For string type, we do experiment with a simple table of varchar(10). After encryption, the onion DET will be tranformed to varbinary(48) due to the padding, and OPE will be varbinary(32), salt should be big int. We insert 1,000,000 plaintext of length 10 into the table, and the figure~\ref{fig:stack12} depicts the results for each column.We can find that even for very short string, three layer of encryption in onion DET can make it larger than the onion OPE. So ope is always assumed  smaller than DET. And the size of salt remains the same as in the experiment with integers. We can find that decrypting the RND layer can produce greater compression ratio. We use gizp with default options. This is an extream case since all the data in the columns are the same. For a big column with low Cardinality, like gender, this approach is expected to produce similar results. 
 
 
 % \begin{figure}[tb]
@@ -97,7 +97,7 @@ For string type, we do experiment with a simple table of varchar(10). After encr
     \centering   
     \includegraphics[width=4.7cm]{images/aftercompression.eps}   
     \caption{\small{This figure shows how the size of each encrypted column change after being compressed using gzip}} 
-    \label{fig:side:a}   
+    \label{fig:stack12}   
   \end{minipage}%   
   % \begin{minipage}[t]{0.5\linewidth}   
   %   \centering   

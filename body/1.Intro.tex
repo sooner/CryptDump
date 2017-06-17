@@ -27,7 +27,7 @@ What is the \textit{perfect} encrypted columns to backup and recovery? We consid
 \begin{itemize}
 \item To the best of our knowledge, we are the first to propose a semantic deduplication method for CryptDB with the help of metadata to reduce storage overhead;
 \item We study all the onions of encryption used in CryptDB and summarize a list of suggestions for operators to make decisions.
-\item We evaluate our method with microbenchmark and TPC-C benchmark. The experimental result shows that our methods could reduce the storage overhead by 75%.
+\item We evaluate our method with microbenchmark and TPC-C benchmark. The experimental result shows that our methods could reduce the storage overhead by 75\%.
 \end{itemize}
 
 % In this paper, we ask the following question: \textit{can we design a new deduplication method for encrypted data?} Further, \textit{can we design a backup and recovery strategy while maintaining the security, reducing the storage and time overhead for backup and recovery?} We propose a new data deduplication method for Cryptdb, which incorporates metadata information to explore semantic redundancy in encrypted data. CryptDB records how the original tables are encrypted and how the columns are replicated in metadata. We can incorporate these extra semantic information We implemented a tool called Cryptdbdump and did experiments with TPC-C-MySQL in the newest version of Cryptdb.

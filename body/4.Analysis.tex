@@ -12,7 +12,7 @@ DET is the only scheme supports both string and integer and also store the compl
 
 \textbf{Integer}. DET for integer uses algorithm named blowfish. The size of the ciphertext is always 64 bits. Therefore, the space overhead is constant.
 
-\textbf{String}. DET for string is not the same esay as integer. To figure out the relationship between the size of plaintext and the size of ciphertext of different layers of DET, we encrypt two plain texts of 10 bytes and 1000 bytes. As illustrated in figure~\ref{fig:side:a},  for the 10 bytes text, the size of ciphertext of DET-JOIN, DET, DET-RND are 16 bytes, 32 bytes, and 48 bytes accordingly. For the 1000 bytes text, the size are 1008 bytes, 1024 bytes and 1048 bytes accordingly. It is straightforward to find out that the size difference among different ciphertexts is the same. They are all 16 bytes. The only special case is between plain text and ciphertext of DET-JOIN. We analysis the algorithms of DET and realize that the first two layers of DET uses AES-CMC for encryption, and the third layer uses AES\_CBC. These three algorithms all execute on blocks, which is now 16 bytes in the implementation of CryptDB. If the input text of the algorithm can not be divided exactly by the block size, the input will be padded with zero to make it divisible. If the input text is divisible, CryptDB will pad the text by one block. 
+\textbf{String}. DET for string is not the same esay as integer. To figure out the relationship between the size of plaintext and the size of ciphertext of different layers of DET, we encrypt two plain texts of 10 bytes and 1000 bytes. As illustrated in table~\ref{tab:encryption-size},  for the 10 bytes text, the size of ciphertext of DET-JOIN, DET, DET-RND are 16 bytes, 32 bytes, and 48 bytes accordingly. For the 1000 bytes text, the size are 1008 bytes, 1024 bytes and 1048 bytes accordingly. It is straightforward to find out that the size difference among different ciphertexts is the same. They are all 16 bytes. The only special case is between plain text and ciphertext of DET-JOIN. We analysis the algorithms of DET and realize that the first two layers of DET uses AES-CMC for encryption, and the third layer uses AES\_CBC. These three algorithms all execute on blocks, which is now 16 bytes in the implementation of CryptDB. If the input text of the algorithm can not be divided exactly by the block size, the input will be padded with zero to make it divisible. If the input text is divisible, CryptDB will pad the text by one block. 
 
 \textbf{Finding 1:} \textit{The space overhead of DET for integer keeps constant regardless of the size of plaintext;}
 
@@ -95,24 +95,6 @@ OPE requires that the cipher text size is double the size of plain text.
 % \end{tabular}
 % \end{table}
 
-\begin{table}
-\renewcommand{\arraystretch}{1.3}
-
-\label{tab:exampless}
-\begin{tabular}{p{0.8cm}|p{0.8cm}p{0.8cm}|p{0.8cm}p{0.8cm}|p{0.8cm}p{0.8cm}}%
-\toprule
-\multirow{2}{2cm}{Layers} & \multicolumn{2}{c}{\textbf{Onion-DET}} & \multicolumn{2}{c}{\textbf{Onion-OPE}} & \multicolumn{2}{c}{\textbf{Onion-HOM}}\\
-\cmidrule{2-7}
-& Integer & String & Integer & String & Integer & String\\
-\midrule
-Plain & 4B & 10B & 4B & 10B & 4B & null \\
-Layer1 & 8B & 16B & 8B & 8B & 256B & null \\
-Layer2 & 8B & 32B & 16B & 16B & null & null \\
-Layer3 & 8B & 48B & 32B & 32B & null & null \\
-\bottomrule
-\end{tabular}
-\caption{This table shows how the size of data change when it is encrypted using layers of encryption. 'null' means such layers does not exists. For example, For Onion-HOM, the plain text of 4 Bytes integer will become 256 Bytes when encrypted with the layer1 algorithm(Pailliar), since Onion-HOM has only two layers, the value for layer2 and layer3 are null}
-\end{table}
 
 
 
@@ -163,6 +145,26 @@ SEARCH is quiet simple: it has only two layers. According to \citep{song2000prac
 
 \section{Computation Overhead of Recovery}
 As we have known the property of the encryption schemes and the data layout. We can now start to design the strategy of deduplication. We will first discuss each onion and then give three simple strategies for analysis. Then in the experiment section, we will use our workload to test the strategies. We first discuss the design choices for each onion of integer data and string data. 
+
+
+\begin{table}
+\renewcommand{\arraystretch}{1.3}
+
+\label{tab:encryption-size}
+\begin{tabular}{p{0.8cm}|p{0.8cm}p{0.8cm}|p{0.8cm}p{0.8cm}|p{0.8cm}p{0.8cm}}%
+\toprule
+\multirow{2}{2cm}{Layers} & \multicolumn{2}{c}{\textbf{Onion-DET}} & \multicolumn{2}{c}{\textbf{Onion-OPE}} & \multicolumn{2}{c}{\textbf{Onion-HOM}}\\
+\cmidrule{2-7}
+& Integer & String & Integer & String & Integer & String\\
+\midrule
+Plain & 4B & 10B & 4B & 10B & 4B & null \\
+Layer1 & 8B & 16B & 8B & 8B & 256B & null \\
+Layer2 & 8B & 32B & 16B & 16B & null & null \\
+Layer3 & 8B & 48B & 32B & 32B & null & null \\
+\bottomrule
+\end{tabular}
+\caption{This table shows how the size of data change when it is encrypted using layers of encryption. 'null' means such layers does not exists. For example, For Onion-HOM, the plain text of 4 Bytes integer will become 256 Bytes when encrypted with the layer1 algorithm(Pailliar), since Onion-HOM has only two layers, the value for layer2 and layer3 are null}
+\end{table}
 
 
 \begin{itemize}

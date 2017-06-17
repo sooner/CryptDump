@@ -48,7 +48,7 @@ ax.bar(xxx,y31,0.15,color='g',label='DET-OPE')
 
 plt.ylim(0,1500)
 #plt.xlim(-0.1, 3.5)
-ax.legend((b1,b2,b3),('DET-STR for strlen=10','DET-STR for strlen=1000','DET-OPE'))
+#ax.legend((b1,b2,b3),('DET-STR for strlen=10','DET-STR for strlen=1000','DET-OPE'))
 
 fig.savefig('onions-for-string.eps')
 

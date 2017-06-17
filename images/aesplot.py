@@ -4,7 +4,7 @@ font = {
 #'family' : 'serif',  
 #        'color'  : 'darkred',  
 #        'weight' : 'normal',  
-        'size'   : 16,  
+        'size'   : 18,  
         }
 
 

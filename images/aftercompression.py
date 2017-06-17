@@ -5,7 +5,7 @@ font = {
 #'family' : 'serif',  
 #        'color'  : 'darkred',  
 #        'weight' : 'normal',  
-        'size'   : 16,  
+        'size'   : 18,  
         }
 
 N = 4
@@ -15,19 +15,19 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.35       # the width of the bars
 
 fig, ax = plt.subplots()
-rects1 = ax.bar(ind, men_means, width, color='r')
+rects1 = ax.bar(ind, men_means, width, color='black')
 
 women_means = (9.4, 0.046, 49.0, 0.097)
 
-rects2 = ax.bar(ind + width, women_means, width, color='y')
+rects2 = ax.bar(ind + width, women_means, width, color='green')
 
 
 # add some text for labels, title and axes ticks
-ax.set_xlabel('Layer', fontdict=font )
+ax.set_xlabel('Onion Layers', fontdict=font )
 ax.set_ylabel('Size in MB', fontdict=font )
 
-ax.set_title('After compression', fontdict=font )
-ax.set_xticks(ind + width / 2)
+ax.set_title('Size before/after compression', fontdict=font )
+ax.set_xticks(ind + width)
 ax.set_xticklabels(('RND_INT', 'DET_INT', 'RND_STR', 'DET_STR'),fontdict=font )
 
 ax.legend((rects1[0], rects2[0]), ('Before compression', 'After compression'))

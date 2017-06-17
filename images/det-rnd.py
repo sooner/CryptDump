@@ -5,7 +5,7 @@ font = {
 #'family' : 'serif',  
 #        'color'  : 'darkred',  
 #        'weight' : 'normal',  
-        'size'   : 16,  
+        'size'   : 18,  
         }
 
 
@@ -16,7 +16,7 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.35       # the width of the bars
 
 fig, ax = plt.subplots()
-rects1 = ax.bar(ind, men_means, width, color='r')
+rects1 = ax.bar(ind, men_means, width, color='black')
 
 #women_means = (20, 34, 34, 13)
 
@@ -29,7 +29,7 @@ ax.set_ylabel( 'Size in MB',fontdict=font )
 
 ax.set_title('Size of DET',fontdict=font)
 ax.set_xticks(ind + width / 2)
-ax.set_xticklabels(('IV', 'DET', 'OPE', 'PLAIN'))
+ax.set_xticklabels(('IV', 'DET', 'OPE', 'PLAIN'),fontdict=font)
 
 #ax.legend((rects1[0], rects2[0]), ('RND-Layer', 'DET-Layer'))
 

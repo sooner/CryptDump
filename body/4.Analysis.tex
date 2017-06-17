@@ -1,6 +1,7 @@
 \section{Space Overhead of Backup}
 
 CryptDB creates multiple onions for each data item in DBMSes to support different kinds of computations. These onions of decryption trade several times of space in DBMSes for security and performance. However, for backup and recovery, there is no SQL queries and computations execute on these backup data. Multiple onions actually carry redundant information from the perspective of backup. We only need backup \textit{some} onions for each data item while maintaining their functionality and reducing space overhead. 
+
 % As a result, we need to figure out \textit{how to find the best onion to backup and recover}.  
 % The onion 'search' for string is not yet implemented in the newest version of CryptDB, so for this onion, our analysis is based on the description in \citep{song2000practical}.
 
@@ -96,7 +97,7 @@ OPE requires that the cipher text size is double the size of plain text.
 
 \begin{table}
 \renewcommand{\arraystretch}{1.3}
-\caption{Simple table}
+
 \label{tab:exampless}
 \begin{tabular}{p{0.8cm}|p{0.8cm}p{0.8cm}|p{0.8cm}p{0.8cm}|p{0.8cm}p{0.8cm}}%
 \toprule
@@ -110,6 +111,7 @@ Layer2 & 8B & 32B & 16B & 16B & null & null \\
 Layer3 & 8B & 48B & 32B & 32B & null & null \\
 \bottomrule
 \end{tabular}
+\caption{This table shows how the size of data change when it is encrypted using layers of encryption. 'null' means such layers does not exists. For example, For Onion-HOM, the plain text of 4 Bytes integer will become 256 Bytes when encrypted with the layer1 algorithm(Pailliar), since Onion-HOM has only two layers, the value for layer2 and layer3 are null}
 \end{table}
 
 
@@ -200,6 +202,7 @@ For those two data types and strategy, we construct microbenchmark to do experim
 \includegraphics[width=8cm]{images/backup_and_recovery.pdf}
 \caption{backup\_and\_recovery.pdf}
 \label{fig:stack7}
+\caption{This figure shows the backup and recovery process. Seven steps are involved. 1.the original table columns are replicated and stored in DBMS. 2.Since the encrypted table's field name are also encrypted, we need to parse the metadata to find the map of the original table columns to the encrypted tables columns. 3. Onces those mapping are found, we can use deduplication to remove duplicates. 4. Compression is ofthen used together with logical backup. 5.6. We can decompress the data, and parse the metadata again to reencrypt the removed columns. 7. We get all the data back, so we are able to recover data into DBMS}
 \end{figure}
 
 

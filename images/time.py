@@ -1,6 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+font = {
+#'family' : 'serif',  
+#        'color'  : 'darkred',  
+#        'weight' : 'normal',  
+        'size'   : 16,  
+        }
+
 N = 3
 men_means = (0.12, 4454.21, 143.76)
 
@@ -16,12 +23,12 @@ rects2 = ax.bar(ind + width, women_means, width, color='y')
 
 
 # add some text for labels, title and axes ticks
-ax.set_xlabel('Layer')
-ax.set_ylabel('Size in MB')
+ax.set_xlabel('Layer',fontdict=font)
+ax.set_ylabel('Size in MB',fontdict=font)
 
-ax.set_title('After compression')
+ax.set_title('After compression',fontdict=font)
 ax.set_xticks(ind + width / 2)
-ax.set_xticklabels(('Blowfish', 'HOM', 'OPE'))
+ax.set_xticklabels(('Blowfish', 'HOM', 'OPE'),fontdict=font)
 
 ax.legend((rects1[0], rects2[0]), ('Encryption', 'Decryption'))
 

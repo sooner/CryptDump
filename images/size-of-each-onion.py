@@ -1,6 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+font = {
+#'family' : 'serif',  
+#        'color'  : 'darkred',  
+#        'weight' : 'normal',  
+        'size'   : 16,  
+        }
+
 N = 5
 men_means = (20, 251, 20,34,7.7)
 
@@ -14,13 +21,13 @@ fig, ax = plt.subplots()
 rects1 = ax.bar(ind, men_means, width, color='b')
 
 # add some text for labels, title and axes ticks
-ax.set_ylabel('length')
-ax.set_xlabel('layers')
+ax.set_ylabel('Length',fontdict=font)
+ax.set_xlabel('Layers',fontdict=font)
 
-ax.set_title('Length of each layers')
+ax.set_title('Length of each layers',fontdict=font)
 
 ax.set_xticks(ind + width / 2)
-ax.set_xticklabels(('IV','HOM', 'DET', 'OPE', 'PLAIN'))
+ax.set_xticklabels(('IV','HOM', 'DET', 'OPE', 'PLAIN'),fontdict=font)
 
 def autolabel(rects):
     """
@@ -34,4 +41,7 @@ def autolabel(rects):
 
 autolabel(rects1)
 
-plt.show()
+#plt.show()
+
+fig.savefig("size-of-each-onion.eps")
+

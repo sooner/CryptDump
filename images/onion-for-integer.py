@@ -1,9 +1,16 @@
 import numpy as np
-
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+
+font = {
+#'family' : 'serif',  
+#        'color'  : 'darkred',  
+#        'weight' : 'normal',  
+        'size'   : 16,  
+        }
+
 
 cmap = plt.get_cmap('Reds')
 colors = [cmap(i) for i in np.linspace(0, 1, 3)]
@@ -43,7 +50,7 @@ count = 0
     #plt.bar(temp, y2[i], 0.13, color=color, label=label[i])
 #    count = count + 1.3
 
-#plt.xticks([m + 0.18 for m in range(4)], ['4 Copies', '8 Copies', '16 Copies', '32 Copies'])
+plt.xticks([m + 0.18 for m in range(3)], ['det-10', 'det-1000', 'ope'])
 
 
 #plt.ylim(0,2.5)

@@ -1,6 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+font = {
+#'family' : 'serif',  
+#        'color'  : 'darkred',  
+#        'weight' : 'normal',  
+        'size'   : 16,  
+        }
+
+
 N = 4
 men_means = (20, 50, 34, 13)
 
@@ -16,10 +24,10 @@ rects2 = ax.bar(ind + width, women_means, width, color='y')
 
 
 # add some text for labels, title and axes ticks
-ax.set_xlabel('Onions')
-ax.set_ylabel('Size')
+ax.set_xlabel( 'Onions',fontdict=font )
+ax.set_ylabel( 'Size',fontdict=font )
 
-ax.set_title('Size of DET')
+ax.set_title('Size of DET',fontdict=font)
 ax.set_xticks(ind + width / 2)
 ax.set_xticklabels(('IV', 'DET', 'OPE', 'PLAIN'))
 
@@ -34,11 +42,13 @@ def autolabel(rects):
         height = rect.get_height()
         ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
                 '%d' % int(height),
-                ha='center', va='bottom')
+                ha='center', va='bottom',fontdict=font)
 
 autolabel(rects1)
 autolabel(rects2)
 
-plt.show()
+#plt.show()
+#
 
 
+fig.savefig('det-rnd.eps' )

@@ -1,6 +1,6 @@
 \section{Introduction}
 
-Applications on cloud today subject to much more threats than ever. Users' private data in back-end database could be unauthorized accessed by hackers, adversaries and even database administrator (DBA) in various ways. To prevent data leaks from the source database, an intuitive alternative is to encrypt data in database. However, it will be struggled for applications to operate SQL-like queries on database directly. Fortunately, with the help of certain encryption schemes, CryptDB \citep{popa2011cryptdb} was proposed to support operation on encrypted data and achieve both practicability and confidentiality for applications to use database management systems (DBMSes). CryptDB attracted much attention of industry from the beginning. Many related systems have been implemented since then by companies like Google, SAP, Microsoft, and some startups\citep{cryptdbsite, kerschbaum2013encrypted}.
+Applications on cloud today subject to much more threats than ever. Users' private data in back-end database could be unauthorized accessed by hackers, adversaries and even database administrator (DBA) in various ways. To prevent data leaks from the source database, an intuitive alternative is to encrypt data in database. However, it will be struggled for applications to operate SQL-like queries on database directly. Fortunately, with the help of certain encryption schemes, CryptDB ~\citep{popa2011cryptdb} was proposed to support operation on encrypted data and achieve both practicability and confidentiality for applications to use database management systems (DBMSes). CryptDB attracted much attention of industry. Many related systems have been implemented since then by companies like Google, SAP, Microsoft, and some startups\citep{cryptdbsite, kerschbaum2013encrypted}.
 % With the development of cloud computing, more services are deployed in the cloud. Security is the first issue to taken into consideration when people store their data in the cloud. Encryption is an important technique to ensure data security. However, for a database system, when data is encrypted, it could be hard for people to perform operations on those data. Fortunately, with the help of certain encryption schemes, computing over encrypted data is possible. CryptDB\citep{popa2011cryptdb}, which was proposed in sosp'11, is such kind of system. Similarity system has been implemented by many companies like google,SAP,Microsoft,and some Startups\citep{cryptdbsite} \citep{kerschbaum2013encrypted}.
 
 
@@ -12,44 +12,48 @@ Meanwhile, cloud database systems face another big challenge: data integrity. Th
 
 % It is reasonable for CryptDB-like systems to trade storage capacity for security and functionality. However, for data backup, it makes no sense to backup all the redundant data. when we do not perform operations on backup data.
 
-Data deduplication techniques are rather common today in backup systems. In fact, data deduplication has already become a standard component for backup systems\citep{fu2015design}. However, for CryptDB-like systems, state-of-art deduplication methods are quite limited because their efficiency heavily rely on content redundancy. For encrypted data, some encryption schemes are specifically designed to encrypt the same contents into different ones. It will be disappointing to explore the content redundancy in encrypted data. 
+Data deduplication techniques are rather common today in backup systems. In fact, data deduplication has already become a standard component for backup systems\citep{fu2015design}. However, for CryptDB-like systems, state-of-art deduplication methods are quite limited because their efficiency heavily rely on content redundancy. For encrypted data, some encryption schemes, like RND\S~\ref{CryptDB}, are specifically designed to encrypt the same contents into different ones. It will be disappointing to explore the content redundancy in encrypted data. 
 % We need a brand new alternative to deduplicate encrypted data.
 % and those methods are unaware of the relations between encrypted data. There are research about deduplicating encrypted data, but they focus on user files in the cloud instead of database systems. 
 
 % CryptDB records how the original tables are encrypted and how the columns are replicated. We call those data metadata in this paper. It stores metadata on the proxy. If we can incorporate these extra semantic information, data deduplication for backup system will be more efficient. And also, the onion layout of fields allow us to make tradeoff between storage size, recover time, and data security.
 
 
-In this paper, we ask the following question: \textit{can we design a new deduplication method for encrypted data?} Further, \textit{can we design a backup and recovery strategy while maintaining the security, reducing the storage and time overhead for backup and recovery.} We propose a new data deduplication method for Cryptdb, which incorporates metadata information to explore semantic redundancy in encrypted data. CryptDB records how the original tables are encrypted and how the columns are replicated in metadata. We can incorporate these extra semantic information We implemented a tool called Cryptdbdump and did experiments with TPC-C-MySQL in the newest version of Cryptdb.
+We present \textbf{semantic deduplication}, which leverages metadata information to explore semantic redundancy in encrypted data. Metadata in CryptDB records how the original tables are encrypted and how the columns are replicated. With metadata, we can identify which columns store the same contents but encrypted by different schemes. Since CryptDB incorporates a number of encryption schemes(RND, DET, OPE, HOM and etc.\S~\ref{CryptDB}) to support various operations, the key challenge for semantic deduplication is to choose the \textit{perfect} encrypted columns among other encrypted ones to backup and recovery.
+
+What is the \textit{perfect} encrypted columns to backup and recovery? We consider three aspects: 1）the original table should be recovered from the selected encrypted columns completely; 2)The storage overhead incurs by these encrypted columns should be relatively small; 3)The time consumed by recovering from these encrypted columns should be relatively short too. It is quite difficult to choose a \textit{perfect} encryption scheme. We study all the onions of encryption(\S~\ref{CryptDB}) used in CryptDB and summarize several findings. Finally, we give a list of suggestions for operators to choose the best strategy for their own. We also 
+
+% In this paper, we ask the following question: \textit{can we design a new deduplication method for encrypted data?} Further, \textit{can we design a backup and recovery strategy while maintaining the security, reducing the storage and time overhead for backup and recovery?} We propose a new data deduplication method for Cryptdb, which incorporates metadata information to explore semantic redundancy in encrypted data. CryptDB records how the original tables are encrypted and how the columns are replicated in metadata. We can incorporate these extra semantic information We implemented a tool called Cryptdbdump and did experiments with TPC-C-MySQL in the newest version of Cryptdb.
 
 
-To realise this, we need to address three main challenges:
+% To realise this, we need to address three main challenges:
 
-1) How to parse the metadata of Cryptdb
+% 1) How to parse the metadata of Cryptdb
 
-2) How  does the time and space overhead change as the onions and layers change
+% 2) How  does the time and space overhead change as the onions and layers change
 
-3) How to choose the right onion and layer to make optimal backup
+% 3) How to choose the right onion and layer to make optimal backup
 
 
-To tackle those problems, we need to
+% To tackle those problems, we need to
 
-1) analyse the structure of metadata in Cryptdb and find duplicates
+% 1) analyse the structure of metadata in Cryptdb and find duplicates
 
-2) do analysis on different onions and layers of encryption scheme and provide statiscis
+% 2) do analysis on different onions and layers of encryption scheme and provide statiscis
 
-3) design a strategy for data backup with the help of metadata and the costs information 
+% 3) design a strategy for data backup with the help of metadata and the costs information 
 
-To summarize, we make the following contributions.
+% To summarize, we make the following contributions.
 
-1) A full analysis of the cost of each layer and onion in Cryptdb
+% 1) A full analysis of the cost of each layer and onion in Cryptdb
 
-2) A new data deduplication method for Cryptdb that utilizes metadata information 
+% 2) A new data deduplication method for Cryptdb that utilizes metadata information 
 
-3) A strategy for choosing the right portion of data for backup, which taken storage size, 
+% 3) A strategy for choosing the right portion of data for backup, which taken storage size, 
 
-4) An implementation of data backup tool called Cryptedbdump 
+% 4) An implementation of data backup tool called Cryptedbdump 
 
-To our knowledge, we are the first to propose a deduplication method for Cryptdb with the help of metadata to reduce storage overhead, and our high level deduplication method can be used together with traditional deduplication techniques like block level comparision \citep{bellare2013message}.
+To the best of our knowledge, we are the first to propose a deduplication method for Cryptdb with the help of metadata to reduce storage overhead, and our high level deduplication method can be used together with traditional deduplication techniques like block level comparision \citep{bellare2013message}.
 
 The rest of this paper is structured as follows. In section 2, we introduce the structure of cryptdb and the structure of encryption metadata in the newest version of Cryptdb. Then, we introduction the characteristics of the encryption schemes use in Cryptdb in section 3. And in section 4, we introduce popular data backup and deduplication methods. In section 5, we introduce our design details and results of experiments. In section 6 we introduce related work. And Section 7 concludes the paper.
 

@@ -3,7 +3,7 @@
 We propose high level deduplication technique the used the metadata in the proxy to find fields in a relational table that are duplicated and encrypted using different encryption schemes. We find proper fields to remove and save the deduplicated field into files. Our technique can be considered as a kind of preprocessing and can be combinded with other deduplication methods.
 
 
-\textbf{backup, dedpulication, and compression} Based on the format of backup, database backup can be categorized into two types:logical backup and physical backup\citep{mysqlbackup}. Our deduplication technique find sementically identically columns of a encrypted table, and backup one copy of the column into text file, which is a kind of logical backup. 
+\textbf{backup, dedpulication, and compression} Based on the format of backup, database backup can be categorized into two types: logical backup and physical backup\citep{mysqlbackup}. Our deduplication technique find sementically identically columns of a encrypted table, and backup one copy of the column into text file, which is a kind of logical backup. 
 
 
 % Deduplication on storage system is a hot research topic\citep{paulo2014survey}.

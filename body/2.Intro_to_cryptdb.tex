@@ -2,6 +2,7 @@
 
 \subsection{CryptDB}\label{CryptDB}
 CryptDB is a system that reconciles practicability and confidentiality for applications that use database management systems(DBMSes). 
+
 It encrypts private data in DBMSes with onions of encryption to prevent curious database administrators. 
 Applications could still execute queries over encrypted data using a collection of efficient SQL-aware encryption schemes. 
 Unlike traditional C/S architecture that web servers issue SQL queries to back-end servers running DBMSes directly as illustrated in figure~\ref{fig:stack1}(a). 
@@ -18,7 +19,7 @@ The decryption keys will be kept in proxy servers where we trust so the DBMS ser
 \begin{figure}[tb]
 \centering
 \includegraphics[width=6cm]{images/Cryptdb-structure2.pdf}
-\caption{Cryptdb-structure2}
+\caption{(a) shows the normal interaction between the web server and the DBMS, (b) shows the four steps of query execution in a cryptdb system}
 \label{fig:stack1}
 \end{figure}
 
@@ -43,7 +44,7 @@ RND provides the maximum security which maps two equal values to different ciphe
 \begin{figure}[tb]
 \centering
 \includegraphics[width=6cm]{images/extend.pdf}
-\caption{extend.pdf}
+\caption{(a) is an plain text table with two columns, and (b) is the coresponding encrypted table. Each column is replicated three times, and encrypted using three different onions, Onion means layers of encryption. An additional IV column is stored, which is used together with the decryption key to decrypt the RND layers of the onions}
 \label{fig:stackx}
 \end{figure}
 
@@ -58,7 +59,7 @@ Different layers of one onion provide different level of security and also diffe
 \begin{figure}[tb]
 \centering
 \includegraphics[width=8cm]{images/Onions.pdf}
-\caption{Onions.pdf}
+\caption{(a)describes the three onions for data of String type.(b)describes the three onions for data of Integer type.}
 \label{fig:stack2}
 \end{figure}
 

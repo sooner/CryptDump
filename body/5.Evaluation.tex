@@ -120,7 +120,7 @@ For string type, we do experiment with a simple table of varchar(10). After encr
 We also give the expected recovery time for each onion based on the assumpation that we only backup the Onion DET. Figure~\ref{fig:stack12} depicts the results.
 
 
-Finally we do experiment with the TPCC-MySQL, the original data is the 74MB, and the encrypted data is 1.5 GB. So there is large expansion. especially for those tables that has columns of integers of small value like 0,1. Those could be stored with 1 Bytes should now pay the 256 Bytes overhead of the onion HOM, inaddition to other onions and the IV column. We can use the simplest method to backup only the DET and IV column, which is 229M+125M. 
+Finally we do experiment with the TPCC-MySQL, the original data is the 74MB, and the encrypted data is 1.5 GB. So there is large expansion. especially for those tables that has columns of integers of small value like 0,1. Those could be stored with 1 Bytes should now pay the 256 Bytes overhead of the onion HOM, inaddition to other onions and the IV column. We can use the simplest method to backup only the DET and IV column, which is 229M(DET)+125M(IV). 
 % Figure~\ref{fig:stack13} depicts the results. As we have mentioned, analyzing a table can be easy since the characteristics of each column is known. 
 
 

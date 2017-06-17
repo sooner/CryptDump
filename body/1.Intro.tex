@@ -21,7 +21,14 @@ Data deduplication techniques are rather common today in backup systems. In fact
 
 We present \textbf{semantic deduplication}, which leverages metadata information to explore semantic redundancy in encrypted data. Metadata in CryptDB records how the original tables are encrypted and how the columns are replicated. With metadata, we can identify which columns store the same contents but encrypted by different schemes. Since CryptDB incorporates a number of encryption schemes(RND, DET, OPE, HOM and etc.\S~\ref{CryptDB}) to support various operations, the key challenge for semantic deduplication is to choose the \textit{perfect} encrypted columns among other encrypted ones to backup and recovery.
 
-What is the \textit{perfect} encrypted columns to backup and recovery? We consider three aspects: 1）the original table should be recovered from the selected encrypted columns completely; 2)The storage overhead incurs by these encrypted columns should be relatively small; 3)The time consumed by recovering from these encrypted columns should be relatively short too. It is quite difficult to choose a \textit{perfect} encryption scheme. We study all the onions of encryption(\S~\ref{CryptDB}) used in CryptDB and summarize several findings. Finally, we give a list of suggestions for operators to choose the best strategy for their own. We also 
+What is the \textit{perfect} encrypted columns to backup and recovery? We consider three aspects: 1) the original table could be recovered from the selected encrypted columns correctly and completely; 2) The storage overhead incurs by these encrypted columns should be relatively small; 3) The time consumed by recovering from these encrypted columns should be relatively short too. It is quite difficult to choose a \textit{perfect} encryption scheme to satisfy these three requirements. We study all the onions of encryption(\S~\ref{CryptDB}) used in CryptDB and summarize several findings. Finally, we give a list of suggestions to help operators to find potentially better solutions for their own. To evaluate the efficiency of semantic deduplication, we conduct an experiment on tables of TPC-C benchmark, which reduces the storage overhead by 75\%.
+
+\textbf{Contribution.} We make the following contributions:
+\begin{itemize}
+\item To the best of our knowledge, we are the first to propose a semantic deduplication method for CryptDB with the help of metadata to reduce storage overhead;
+\item We study all the onions of encryption used in CryptDB and summarize a list of suggestions for operators to make decisions.
+\item We evaluate our method with microbenchmark and TPC-C benchmark. The experimental result shows that our methods could reduce the storage overhead by 75%.
+\end{itemize}
 
 % In this paper, we ask the following question: \textit{can we design a new deduplication method for encrypted data?} Further, \textit{can we design a backup and recovery strategy while maintaining the security, reducing the storage and time overhead for backup and recovery?} We propose a new data deduplication method for Cryptdb, which incorporates metadata information to explore semantic redundancy in encrypted data. CryptDB records how the original tables are encrypted and how the columns are replicated in metadata. We can incorporate these extra semantic information We implemented a tool called Cryptdbdump and did experiments with TPC-C-MySQL in the newest version of Cryptdb.
 
@@ -53,8 +60,8 @@ What is the \textit{perfect} encrypted columns to backup and recovery? We consid
 
 % 4) An implementation of data backup tool called Cryptedbdump 
 
-To the best of our knowledge, we are the first to propose a deduplication method for Cryptdb with the help of metadata to reduce storage overhead, and our high level deduplication method can be used together with traditional deduplication techniques like block level comparision \citep{bellare2013message}.
+% To the best of our knowledge, we are the first to propose a deduplication method for Cryptdb with the help of metadata to reduce storage overhead, and our high level deduplication method can be used together with traditional deduplication techniques like block level comparision \citep{bellare2013message}.
 
-The rest of this paper is structured as follows. In section 2, we introduce the structure of cryptdb and the structure of encryption metadata in the newest version of Cryptdb. Then, we introduction the characteristics of the encryption schemes use in Cryptdb in section 3. And in section 4, we introduce popular data backup and deduplication methods. In section 5, we introduce our design details and results of experiments. In section 6 we introduce related work. And Section 7 concludes the paper.
+% The rest of this paper is structured as follows. In section 2, we introduce the structure of cryptdb and the structure of encryption metadata in the newest version of Cryptdb. Then, we introduction the characteristics of the encryption schemes use in Cryptdb in section 3. And in section 4, we introduce popular data backup and deduplication methods. In section 5, we introduce our design details and results of experiments. In section 6 we introduce related work. And Section 7 concludes the paper.
 
 

@@ -200,9 +200,8 @@ For those two data types and strategy, we construct microbenchmark to do experim
 \begin{figure}[tb]
 \centering
 \includegraphics[width=8cm]{images/backup_and_recovery.pdf}
-\caption{backup\_and\_recovery.pdf}
 \label{fig:stack7}
-\caption{This figure shows the backup and recovery process. Seven steps are involved. 1.the original table columns are replicated and stored in DBMS. 2.Since the encrypted table's field name are also encrypted, we need to parse the metadata to find the map of the original table columns to the encrypted tables columns. 3. Onces those mapping are found, we can use deduplication to remove duplicates. 4. Compression is ofthen used together with logical backup. 5.6. We can decompress the data, and parse the metadata again to reencrypt the removed columns. 7. We get all the data back, so we are able to recover data into DBMS}
+\caption{\small{This figure shows the backup and recovery process. Seven steps are involved. 1.the original table columns are replicated and stored in DBMS. 2.Since the encrypted table's field name are also encrypted, we need to parse the metadata to find the map of the original table columns to the encrypted tables columns. 3. Onces those mapping are found, we can use deduplication to remove duplicates. 4. Compression is often used together with logical backup. 5.6. We can decompress the data, and parse the metadata again to re-encrypt the removed columns. 7. We get all the data back, so we are able to recover data into DBMS}}
 \end{figure}
 
 

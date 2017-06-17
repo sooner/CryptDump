@@ -118,7 +118,9 @@ For string type, we do experiment with a simple table of varchar(10). After encr
 We also give the expected recovery time for each onion based on the assumpation that we only backup the Onion DET. Figure~\ref{fig:stack12} depicts the results.
 
 
-Finally we do experiment with the TPCC-MySQL, Figure~\ref{fig:stack13} depicts the results. As we have mentioned, analyzing a table can be easy since the characteristics of each column is known. 
+Finally we do experiment with the TPCC-MySQL, the original data is the 74MB, and the encrypted data is 1.5 GB. So there is large expansion. especially for those tables that has columns of integers of small value like 0,1. Those could be stored with 1 Bytes should now pay the 256 Bytes overhead of the onion HOM, inaddition to other onions and the IV column. We can use the simplest method to backup only the DET and IV column, which is 229M+125M. 
+% Figure~\ref{fig:stack13} depicts the results. As we have mentioned, analyzing a table can be easy since the characteristics of each column is known. 
+
 
 % \begin{figure}[tb]
 % \centering
@@ -159,19 +161,19 @@ Based on the above results, we can find that, in the current implementation of C
 
 
 
-\begin{table*}
-\renewcommand{\arraystretch}{1.3}
-\label{tab:example}
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
-  \hline
-  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-&total & customer & district & history & item & new\_order & order\_line & orders & stock & warehouse   \\
-DET & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1&1 \\  
-OPE & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1&1 \\
-HOM & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1&1 \\
-IV & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1&1 \\
-\hline
-\end{tabular}
-\caption{This table shows the size of each of tcpp-mysql's table's onions and IV column}
-\end{table*}
+% \begin{table*}
+% \renewcommand{\arraystretch}{1.3}
+% \label{tab:example}
+% \centering
+% \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+%   \hline
+%   % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+% &total & customer & district & history & item & new\_order & order\_line & orders & stock & warehouse   \\
+% DET &  & 13M+9M+5.1M+3.8M+9*608K & 1 & 1 & 1 & 1 & 1 & 1 & 1&1 \\  
+% OPE &  & 13*976k+8*608k & 1 & 1 & 1 & 1 & 1 & 1 & 1&1 \\
+% HOM &  & 7.4M*9 & 1 & 1 & 1 & 1 & 1 & 1 & 1&1 \\
+% IV &  & 608k*21 & 1 & 1 & 1 & 1 & 1 & 1 & 1&1 \\
+% \hline
+% \end{tabular}
+% \caption{This table shows the size of each of tcpp-mysql's table's onions and IV column}
+% \end{table*}
